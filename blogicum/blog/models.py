@@ -1,5 +1,6 @@
-from django.db import models  # type: ignore[import-untyped]
-from django.contrib.auth import get_user_model  # type: ignore[import-untyped]
+from django.db import models  # type: ignore
+from django.contrib.auth import get_user_model  # type: ignore
+from django.urls import reverse_lazy  # type: ignore
 
 from .querysets import CustomQuerySet
 
@@ -69,6 +70,26 @@ class Location(BaseModel):
         return self.name
 
 
+class Comment(BaseModel):
+    """Комментарии к постам."""
+
+    text = models.TextField(verbose_name='Текст')
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Автор комментария',
+        related_name='comments_for_author',
+    )
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ('pub_date', 'text')
+
+    def __str__(self):
+        return self.text
+    
+
 class Post(BaseModel):
     """
     Модель поста.
@@ -109,6 +130,14 @@ class Post(BaseModel):
         related_name='posts_for_category',
         verbose_name='Категория',
     )
+    image = models.ImageField('Фото', upload_to='post_images', blank=True)
+    comments = models.ForeignKey(
+        Comment,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name='posts_for_comment',
+        verbose_name='Комментарий',
+    )
     objects = CustomQuerySet.as_manager()
 
     class Meta:
@@ -118,3 +147,6 @@ class Post(BaseModel):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse_lazy("blog:post_detail", kwargs={'id': self.pk})
