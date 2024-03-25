@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect  # type: ignore
+from django.shortcuts import get_object_or_404  # type: ignore
 from django.db.models import QuerySet  # type: ignore
 from django.views.generic import CreateView  # type: ignore
 from django.views.generic import DeleteView, ListView, UpdateView

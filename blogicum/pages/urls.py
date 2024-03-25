@@ -5,8 +5,8 @@ from . import views
 app_name: str = 'pages'
 
 urlpatterns: list[path] = [
-    path('about/', views.About.as_view, name='about'),
-    path('rules/', views.Rules.as_view, name='rules'),
+    path('about/', views.About.as_view(), name='about'),
+    path('rules/', views.Rules.as_view(), name='rules'),
 ]
 
 handler404 = views.page_not_found
