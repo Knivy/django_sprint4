@@ -1,13 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect  # type: ignore
 from django.db.models import QuerySet  # type: ignore
 from django.views.generic import CreateView  # type: ignore
-from django.views.generic import ListView, UpdateView
+from django.views.generic import DeleteView, ListView, UpdateView
 from django.contrib.auth import get_user_model  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy  # type: ignore
 
-from .models import Category, Post
+from .models import Category, Comment, Post
 from .forms import CommentForm, PostForm
 
 
@@ -48,7 +48,8 @@ class PostDetailView(ListView):
         context: dict = super().context_data(**kwargs)
         post: Post = self.get_post()
         context['post'] = post
-        context['form'] = CommentForm(self.request.POST or None)
+        if self.request.user.is_authenticated:
+            context['form'] = CommentForm(self.request.POST or None)
         return context
 
     def get_queryset(self) -> QuerySet:
@@ -56,12 +57,6 @@ class PostDetailView(ListView):
         post: Post = self.get_post()
         queryset: QuerySet = post.comments.select_related('author')
         return queryset
-    
-    def post(self):
-        form = CommentForm(self.request.POST or None)
-        if form.is_valid():
-            form.save()
-        return redirect('blog:post_detail', id=self.pk)
 
 
 class CategoryListView(ListView):
@@ -127,13 +122,20 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def get_success_url(self):
+        """Переадресация."""
         return reverse_lazy("blog:profile", kwargs={"pk": self.author})
+
+    def form_valid(self, form):
+        """Записать автора."""
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class OnlyAuthorMixin(UserPassesTestMixin):
     """Проверка на авторство."""
 
     def test_func(self):
+        """Проверка на авторство."""
         object = self.get_object()
         return object.author == self.request.user
 
@@ -144,3 +146,46 @@ class PostUpdateView(OnlyAuthorMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name: str = 'blog/create.html'
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    """Создание комментария."""
+
+    template_name: str = 'blog/detail.html'
+    model = Comment
+    form_class = CommentForm
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:post_detail",
+                            kwargs={"id": self.kwargs.get('post_id')})
+
+    def form_valid(self, form):
+        """Записать автора."""
+        form.instance.author = self.request.user
+        form.instance.posts_for_comment.comment_count += 1
+        return super().form_valid(form)
+
+
+class CommentUpdateView(OnlyAuthorMixin, UpdateView):
+    """Редактирование комментария."""
+
+    model = Comment
+    form_class = CommentForm
+    template_name: str = 'blog/comment.html'
+
+
+class PostDeleteView(DeleteView):
+    """Удаление поста."""
+
+    model = Post
+    template_name = 'blog/create.html'
+    success_url = reverse_lazy('blog:index')
+
+
+class CommentDeleteView(DeleteView):
+    """Удаление комментария."""
+
+    model = Comment
+    template_name = 'blog/comment.html'
+    success_url = reverse_lazy('blog:index')

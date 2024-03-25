@@ -84,11 +84,15 @@ class Comment(BaseModel):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ('pub_date', 'text')
+        ordering = ('created_at', 'text')
 
     def __str__(self):
         return self.text
-    
+
+    def delete(self, *args, **kwargs):
+        self.posts_for_comment.comment_count -= 1
+        super().delete(*args, **kwargs)
+
 
 class Post(BaseModel):
     """
@@ -138,6 +142,8 @@ class Post(BaseModel):
         related_name='posts_for_comment',
         verbose_name='Комментарий',
     )
+    comment_count = models.IntegerField(default=0,
+                                        verbose_name='Число комментариев')
     objects = CustomQuerySet.as_manager()
 
     class Meta:
