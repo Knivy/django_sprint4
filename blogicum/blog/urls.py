@@ -11,7 +11,7 @@ urlpatterns: list[path] = [
     path('category/<slug:category_slug>/', views.CategoryListView.as_view(),
          name='category_posts'),
     path('profile/<int:pk>/', views.ProfileListView.as_view(), name='profile'),
-    path('posts/create/', views.PostCreateView.as_view(), name='create'),
+    path('posts/create/', views.PostCreateView.as_view(), name='create_post'),
     path('posts/<int:post_id>/edit/',
          views.PostUpdateView.as_view(), name='edit'),
     path('posts/<int:post_id>/comment', views.CommentCreateView.as_view(),

@@ -45,7 +45,7 @@ class PostDetailView(ListView):
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о посте."""
-        context: dict = super().context_data(**kwargs)
+        context: dict = super().get_context_data(**kwargs)
         post: Post = self.get_post()
         context['post'] = post
         if self.request.user.is_authenticated:
@@ -77,7 +77,7 @@ class CategoryListView(ListView):
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о категории."""
-        context: dict = super().context_data(**kwargs)
+        context: dict = super().get_context_data(**kwargs)
         category: Category = self.get_category()
         context['category'] = category
         return context
@@ -97,7 +97,7 @@ class ProfileListView(ListView):
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о профиле пользователя."""
-        context: dict = super().context_data(**kwargs)
+        context: dict = super().get_context_data(**kwargs)
         context['profile'] = User.objects.filter(pk=self.kwargs.get('pk'))
         return context
 
