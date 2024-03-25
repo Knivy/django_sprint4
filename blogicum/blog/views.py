@@ -55,7 +55,7 @@ class PostDetailView(ListView):
     def get_queryset(self) -> QuerySet:
         """Возвращает список комментариев данного поста."""
         post: Post = self.get_post()
-        queryset: QuerySet = post.comments.select_related('author')
+        queryset: QuerySet = post.comments_for_post.select_related('author')
         return queryset
 
 
@@ -163,7 +163,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Записать автора."""
         form.instance.author = self.request.user
-        form.instance.posts_for_comment.comment_count += 1
+        form.instance.post.comment_count += 1
         return super().form_valid(form)
 
 

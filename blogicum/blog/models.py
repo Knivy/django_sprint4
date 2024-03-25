@@ -70,30 +70,6 @@ class Location(BaseModel):
         return self.name
 
 
-class Comment(BaseModel):
-    """Комментарии к постам."""
-
-    text = models.TextField(verbose_name='Текст')
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name='Автор комментария',
-        related_name='comments_for_author',
-    )
-
-    class Meta:
-        verbose_name = 'комментарий'
-        verbose_name_plural = 'Комментарии'
-        ordering = ('created_at', 'text')
-
-    def __str__(self):
-        return self.text
-
-    def delete(self, *args, **kwargs):
-        self.posts_for_comment.comment_count -= 1
-        super().delete(*args, **kwargs)
-
-
 class Post(BaseModel):
     """
     Модель поста.
@@ -135,13 +111,6 @@ class Post(BaseModel):
         verbose_name='Категория',
     )
     image = models.ImageField('Фото', upload_to='post_images', blank=True)
-    comments = models.ForeignKey(
-        Comment,
-        on_delete=models.DO_NOTHING,
-        null=True,
-        related_name='posts_for_comment',
-        verbose_name='Комментарий',
-    )
     comment_count = models.IntegerField(default=0,
                                         verbose_name='Число комментариев')
     objects = CustomQuerySet.as_manager()
@@ -156,3 +125,33 @@ class Post(BaseModel):
 
     def get_absolute_url(self):
         return reverse_lazy("blog:post_detail", kwargs={'id': self.pk})
+
+
+class Comment(BaseModel):
+    """Комментарии к постам."""
+
+    text = models.TextField(verbose_name='Текст')
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Автор комментария',
+        related_name='comments_for_author',
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        verbose_name='Публикация',
+        related_name='comments_for_post',
+    )
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ('created_at', 'text')
+
+    def __str__(self):
+        return self.text
+
+    def delete(self, *args, **kwargs):
+        self.post.comment_count -= 1
+        super().delete(*args, **kwargs)

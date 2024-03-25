@@ -1,0 +1,1986 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-7.1.3, pluggy-1.0.0 -- /home/albina/Dev/django_sprint4/venv/bin/python3
+django: settings: blogicum.settings (from ini)
+rootdir: /home/albina/Dev/django_sprint4, configfile: pytest.ini, testpaths: tests/
+plugins: Faker-12.0.1, django-4.5.2
+collecting ... collected 25 items
+
+tests/test_content.py::TestContent::test_unpublished ERROR               [  4%]
+tests/test_content.py::TestContent::test_only_own_pubs_in_category ERROR [  8%]
+tests/test_content.py::TestContent::test_only_own_pubs_in_profile ERROR  [ 12%]
+tests/test_content.py::TestContent::test_unpublished_category ERROR      [ 16%]
+tests/test_content.py::TestContent::test_future_posts ERROR              [ 20%]
+tests/test_content.py::TestContent::test_pagination ERROR                [ 24%]
+tests/test_content.py::TestContent::test_image_visible ERROR             [ 28%]
+tests/test_err_pages.py::test_custom_err_handlers ERROR                  [ 32%]
+tests/test_users.py::test_custom_err_handlers ERROR                      [ 36%]
+tests/test_users.py::test_profile ERROR                                  [ 40%]
+tests/test_comment.py::test_comment_created_at ERROR                     [ 44%]
+tests/test_comment.py::test_comment ERROR                                [ 48%]
+tests/test_comment.py::test_404_on_comment_deleted_post ERROR            [ 52%]
+tests/test_post.py::test_post_created_at ERROR                           [ 56%]
+tests/test_post.py::test_post ERROR                                      [ 60%]
+tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`post` field] <- tests/conftest.py PASSED [ 64%]
+tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`author` field] <- tests/conftest.py PASSED [ 68%]
+tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`text` field] <- tests/conftest.py PASSED [ 72%]
+tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`created_at` field] <- tests/conftest.py PASSED [ 76%]
+tests/test_emails.py::test_gitignore PASSED                              [ 80%]
+tests/test_emails.py::test_email_backend_settings PASSED                 [ 84%]
+tests/test_err_pages.py::test_csrf_failure_view FAILED                   [ 88%]
+tests/test_post.py::TestPostModelAttrs::test_model_attrs[`image` field] <- tests/conftest.py PASSED [ 92%]
+tests/test_post.py::TestPostModelAttrs::test_model_attrs[`pub_date` field] <- tests/conftest.py PASSED [ 96%]
+tests/test_static_pages.py::test_static_pages_as_cbv FAILED              [100%]
+
+==================================== ERRORS ====================================
+________________ ERROR at setup of TestContent.test_unpublished ________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_unpublished>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+_________ ERROR at setup of TestContent.test_only_own_pubs_in_category _________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_only_own_pubs_in_category>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+_________ ERROR at setup of TestContent.test_only_own_pubs_in_profile __________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_only_own_pubs_in_profile>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+___________ ERROR at setup of TestContent.test_unpublished_category ____________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_unpublished_category>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+_______________ ERROR at setup of TestContent.test_future_posts ________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_future_posts>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+________________ ERROR at setup of TestContent.test_pagination _________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_pagination>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+_______________ ERROR at setup of TestContent.test_image_visible _______________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_image_visible>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+__________________ ERROR at setup of test_custom_err_handlers __________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_custom_err_handlers>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+__________________ ERROR at setup of test_custom_err_handlers __________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_custom_err_handlers>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+________________________ ERROR at setup of test_profile ________________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_profile>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+__________________ ERROR at setup of test_comment_created_at ___________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_comment_created_at>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+________________________ ERROR at setup of test_comment ________________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_comment>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+______________ ERROR at setup of test_404_on_comment_deleted_post ______________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_404_on_comment_deleted_post>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+____________________ ERROR at setup of test_post_created_at ____________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_post_created_at>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+_________________________ ERROR at setup of test_post __________________________
+
+self = <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>
+sql = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x7bd6287776d0>, 'cursor': <django.db.backends.utils.CursorDebugWrapper object at 0x7bd6276a3490>})
+
+    def _execute(self, sql, params, *ignored_wrapper_args):
+        self.db.validate_no_broken_transaction()
+        with self.db.wrap_database_errors:
+            if params is None:
+                # params default might be backend specific.
+                return self.cursor.execute(sql)
+            else:
+>               return self.cursor.execute(sql, params)
+
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       sqlite3.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+request = <SubRequest '_django_db_marker' for <Function test_post>>
+
+    @pytest.fixture(autouse=True)
+    def _django_db_marker(request) -> None:
+        """Implement the django_db marker, internal to pytest-django."""
+        marker = request.node.get_closest_marker("django_db")
+        if marker:
+>           request.getfixturevalue("_django_db_helper")
+
+venv/lib/python3.10/site-packages/pytest_django/plugin.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.10/site-packages/pytest_django/fixtures.py:122: in django_db_setup
+    db_cfg = setup_databases(
+venv/lib/python3.10/site-packages/django/test/utils.py:179: in setup_databases
+    connection.creation.create_test_db(
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:90: in create_test_db
+    self.connection._test_serialized_contents = self.serialize_db_to_string()
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:136: in serialize_db_to_string
+    serializers.serialize("json", get_objects(), indent=None, stream=out)
+venv/lib/python3.10/site-packages/django/core/serializers/__init__.py:129: in serialize
+    s.serialize(queryset, **options)
+venv/lib/python3.10/site-packages/django/core/serializers/base.py:90: in serialize
+    for count, obj in enumerate(queryset, start=1):
+venv/lib/python3.10/site-packages/django/db/backends/base/creation.py:133: in get_objects
+    yield from queryset.iterator()
+venv/lib/python3.10/site-packages/django/db/models/query.py:353: in _iterator
+    yield from self._iterable_class(self, chunked_fetch=use_chunked_fetch, chunk_size=chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/query.py:51: in __iter__
+    results = compiler.execute_sql(chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size)
+venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1175: in execute_sql
+    cursor.execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:98: in execute
+    return super().execute(sql, params)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: in execute
+    return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: in _execute
+    with self.db.wrap_database_errors:
+venv/lib/python3.10/site-packages/django/db/utils.py:90: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: in _execute
+    return self.cursor.execute(sql, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x7bd62768a290>
+query = 'SELECT "blog_comment"."id", "blog_comment"."is_published", "blog_comment"."created_at", "blog_comment"."text", "blog_comment"."author_id", "blog_comment"."post_id" FROM "blog_comment" ORDER BY "blog_comment"."id" ASC'
+params = ()
+
+    def execute(self, query, params=None):
+        if params is None:
+            return Database.Cursor.execute(self, query)
+        query = self.convert_query(query)
+>       return Database.Cursor.execute(self, query, params)
+E       django.db.utils.OperationalError: no such column: blog_comment.post_id
+
+venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: OperationalError
+=================================== FAILURES ===================================
+____________________________ test_csrf_failure_view ____________________________
+
+parser = <django.template.base.Parser object at 0x7bd626fb7880>
+name = 'django_bootstrap5'
+
+    def find_library(parser, name):
+        try:
+>           return parser.libraries[name]
+E           KeyError: 'django_bootstrap5'
+
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:1037: KeyError
+
+During handling of the above exception, another exception occurred:
+
+    def test_csrf_failure_view():
+        csrf_failure_view_setting = getattr(settings, "CSRF_FAILURE_VIEW", "")
+        module_name, function_name = csrf_failure_view_setting.rsplit(".", 1)
+        csrf_failure_view = None
+        try:
+            module = import_module(module_name)
+            csrf_failure_view = getattr(module, function_name, None)
+        except Exception:
+            pass
+        assert csrf_failure_view, (
+            "Убедитесь, что в `settings.py` задана настройка `CSRF_FAILURE_VIEW` и"
+            " что она указывает на существующую view-функцию."
+        )
+    
+        request = HttpRequest()
+        request.method = "POST"
+        request.POST = {}
+    
+        try:
+>           response = csrf_failure_view(request)
+
+tests/test_err_pages.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = <HttpRequest>, reason = ''
+
+    def csrf_failure(request, reason='') -> HttpResponse:
+        """Ошибка 403: Ошибка CSRF токена."""
+>       return render(request, 'pages/403csrf.html', status=403)
+
+blogicum/pages/views.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = <HttpRequest>, template_name = 'pages/403csrf.html', context = None
+content_type = None, status = 403, using = None
+
+    def render(request, template_name, context=None, content_type=None, status=None, using=None):
+        """
+        Return a HttpResponse whose content is filled with the result of calling
+        django.template.loader.render_to_string() with the passed arguments.
+        """
+>       content = loader.render_to_string(template_name, context, request, using=using)
+
+venv/lib/python3.10/site-packages/django/shortcuts.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+template_name = 'pages/403csrf.html', context = None, request = <HttpRequest>
+using = None
+
+    def render_to_string(template_name, context=None, request=None, using=None):
+        """
+        Load a template and render it with a context. Return a string.
+    
+        template_name may be a string or a list of strings.
+        """
+        if isinstance(template_name, (list, tuple)):
+            template = select_template(template_name, using=using)
+        else:
+            template = get_template(template_name, using=using)
+>       return template.render(context, request)
+
+venv/lib/python3.10/site-packages/django/template/loader.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.backends.django.Template object at 0x7bd627176380>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+request = <HttpRequest>
+
+    def render(self, context=None, request=None):
+        context = make_context(context, request, autoescape=self.backend.engine.autoescape)
+        try:
+>           return self.template.render(context)
+
+venv/lib/python3.10/site-packages/django/template/backends/django.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Template object at 0x7bd6271069b0>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def render(self, context):
+        "Display stage -- can be called many times"
+        with context.render_context.push_state(self):
+            if context.template is None:
+                with context.bind_template(self):
+                    context.template_name = self.name
+>                   return self._render(context)
+
+venv/lib/python3.10/site-packages/django/template/base.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Template object at 0x7bd6271069b0>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def instrumented_test_render(self, context):
+        """
+        An instrumented Template render method, providing a signal that can be
+        intercepted by the test Client.
+        """
+        template_rendered.send(sender=self, template=self, context=context)
+>       return self.nodelist.render(context)
+
+venv/lib/python3.10/site-packages/django/test/utils.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = [<ExtendsNode: extends "base.html">]
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def render(self, context):
+        bits = []
+        for node in self:
+            if isinstance(node, Node):
+>               bit = node.render_annotated(context)
+
+venv/lib/python3.10/site-packages/django/template/base.py:938: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ExtendsNode: extends "base.html">
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def render_annotated(self, context):
+        """
+        Render the node. If debug is True and an exception occurs during
+        rendering, the exception is annotated with contextual line information
+        where it occurred in the template. For internal usage this method is
+        preferred over using the render method directly.
+        """
+        try:
+>           return self.render(context)
+
+venv/lib/python3.10/site-packages/django/template/base.py:905: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ExtendsNode: extends "base.html">
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def render(self, context):
+>       compiled_parent = self.get_parent(context)
+
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ExtendsNode: extends "base.html">
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def get_parent(self, context):
+        parent = self.parent_name.resolve(context)
+        if not parent:
+            error_msg = "Invalid template name in 'extends' tag: %r." % parent
+            if self.parent_name.filters or\
+                    isinstance(self.parent_name.var, Variable):
+                error_msg += " Got this from the '%s' variable." %\
+                    self.parent_name.token
+            raise TemplateSyntaxError(error_msg)
+        if isinstance(parent, Template):
+            # parent is a django.template.Template
+            return parent
+        if isinstance(getattr(parent, 'template', None), Template):
+            # parent is a django.template.backends.django.Template
+            return parent.template
+>       return self.find_template(parent, context)
+
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ExtendsNode: extends "base.html">, template_name = 'base.html'
+context = [{'True': True, 'False': False, 'None': None}, {}, {}]
+
+    def find_template(self, template_name, context):
+        """
+        This is a wrapper around engine.find_template(). A history is kept in
+        the render_context attribute between successive extends calls and
+        passed as the skip argument. This enables extends to work recursively
+        without extending the same template twice.
+        """
+        history = context.render_context.setdefault(
+            self.context_key, [self.origin],
+        )
+>       template, origin = context.template.engine.find_template(
+            template_name, skip=history,
+        )
+
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.engine.Engine object at 0x7bd6271764a0>
+name = 'base.html', dirs = None
+skip = [<django.template.base.Origin object at 0x7bd6271075e0>]
+
+    def find_template(self, name, dirs=None, skip=None):
+        tried = []
+        for loader in self.template_loaders:
+            try:
+>               template = loader.get_template(name, skip=skip)
+
+venv/lib/python3.10/site-packages/django/template/engine.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.loaders.cached.Loader object at 0x7bd627176200>
+template_name = 'base.html'
+skip = [<django.template.base.Origin object at 0x7bd6271075e0>]
+
+    def get_template(self, template_name, skip=None):
+        """
+        Perform the caching that gives this loader its name. Often many of the
+        templates attempted will be missing, so memory use is of concern here.
+        To keep it in check, caching behavior is a little complicated when a
+        template is not found. See ticket #26306 for more details.
+    
+        With template debugging disabled, cache the TemplateDoesNotExist class
+        for every missing template and raise a new instance of it after
+        fetching it from the cache.
+    
+        With template debugging enabled, a unique TemplateDoesNotExist object
+        is cached for each missing template to preserve debug data. When
+        raising an exception, Python sets __traceback__, __context__, and
+        __cause__ attributes on it. Those attributes can contain references to
+        all sorts of objects up the call chain and caching them creates a
+        memory leak. Thus, unraised copies of the exceptions are cached and
+        copies of those copies are raised after they're fetched from the cache.
+        """
+        key = self.cache_key(template_name, skip)
+        cached = self.get_template_cache.get(key)
+        if cached:
+            if isinstance(cached, type) and issubclass(cached, TemplateDoesNotExist):
+                raise cached(template_name)
+            elif isinstance(cached, TemplateDoesNotExist):
+                raise copy_exception(cached)
+            return cached
+    
+        try:
+>           template = super().get_template(template_name, skip)
+
+venv/lib/python3.10/site-packages/django/template/loaders/cached.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.loaders.cached.Loader object at 0x7bd627176200>
+template_name = 'base.html'
+skip = [<django.template.base.Origin object at 0x7bd6271075e0>]
+
+    def get_template(self, template_name, skip=None):
+        """
+        Call self.get_template_sources() and return a Template object for
+        the first template matching template_name. If skip is provided, ignore
+        template origins in skip. This is used to avoid recursion during
+        template extending.
+        """
+        tried = []
+    
+        for origin in self.get_template_sources(template_name):
+            if skip is not None and origin in skip:
+                tried.append((origin, 'Skipped to avoid recursion'))
+                continue
+    
+            try:
+                contents = self.get_contents(origin)
+            except TemplateDoesNotExist:
+                tried.append((origin, 'Source does not exist'))
+                continue
+            else:
+>               return Template(
+                    contents, origin, origin.template_name, self.engine,
+                )
+
+venv/lib/python3.10/site-packages/django/template/loaders/base.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Template object at 0x7bd626fb6620>
+template_string = '{% load static %}\n{% load django_bootstrap5 %}\n<!DOCTYPE html>\n<html lang="ru">\n  <head>\n    <meta charset="utf-...lock content %}{% endblock %}\n      </div>\n    </main>\n    {% include "includes/footer.html" %}\n  </body>\n</html>'
+origin = <django.template.base.Origin object at 0x7bd626fb6020>
+name = 'base.html'
+engine = <django.template.engine.Engine object at 0x7bd6271764a0>
+
+    def __init__(self, template_string, origin=None, name=None, engine=None):
+        # If Template is instantiated directly rather than from an Engine and
+        # exactly one Django template engine is configured, use that engine.
+        # This is required to preserve backwards-compatibility for direct use
+        # e.g. Template('...').render(Context({...}))
+        if engine is None:
+            from .engine import Engine
+            engine = Engine.get_default()
+        if origin is None:
+            origin = Origin(UNKNOWN_SOURCE)
+        self.name = name
+        self.origin = origin
+        self.engine = engine
+        self.source = str(template_string)  # May be lazy.
+>       self.nodelist = self.compile_nodelist()
+
+venv/lib/python3.10/site-packages/django/template/base.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Template object at 0x7bd626fb6620>
+
+    def compile_nodelist(self):
+        """
+        Parse and compile the template source into a nodelist. If debug
+        is True and an exception occurs during parsing, the exception is
+        annotated with contextual line information where it occurred in the
+        template source.
+        """
+        if self.engine.debug:
+            lexer = DebugLexer(self.source)
+        else:
+            lexer = Lexer(self.source)
+    
+        tokens = lexer.tokenize()
+        parser = Parser(
+            tokens, self.engine.template_libraries, self.engine.template_builtins,
+            self.origin,
+        )
+    
+        try:
+>           return parser.parse()
+
+venv/lib/python3.10/site-packages/django/template/base.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Parser object at 0x7bd626fb7880>, parse_until = []
+
+    def parse(self, parse_until=None):
+        """
+        Iterate through the parser tokens and compiles each one into a node.
+    
+        If parse_until is provided, parsing will stop once one of the
+        specified tokens has been reached. This is formatted as a list of
+        tokens, e.g. ['elif', 'else', 'endif']. If no matching token is
+        reached, raise an exception with the unclosed block tag details.
+        """
+        if parse_until is None:
+            parse_until = []
+        nodelist = NodeList()
+        while self.tokens:
+            token = self.next_token()
+            # Use the raw values here for TokenType.* for a tiny performance boost.
+            if token.token_type.value == 0:  # TokenType.TEXT
+                self.extend_nodelist(nodelist, TextNode(token.contents), token)
+            elif token.token_type.value == 1:  # TokenType.VAR
+                if not token.contents:
+                    raise self.error(token, 'Empty variable tag on line %d' % token.lineno)
+                try:
+                    filter_expression = self.compile_filter(token.contents)
+                except TemplateSyntaxError as e:
+                    raise self.error(token, e)
+                var_node = VariableNode(filter_expression)
+                self.extend_nodelist(nodelist, var_node, token)
+            elif token.token_type.value == 2:  # TokenType.BLOCK
+                try:
+                    command = token.contents.split()[0]
+                except IndexError:
+                    raise self.error(token, 'Empty block tag on line %d' % token.lineno)
+                if command in parse_until:
+                    # A matching token has been reached. Return control to
+                    # the caller. Put the token back on the token list so the
+                    # caller knows where it terminated.
+                    self.prepend_token(token)
+                    return nodelist
+                # Add the token to the command stack. This is used for error
+                # messages if further parsing fails due to an unclosed block
+                # tag.
+                self.command_stack.append((command, token))
+                # Get the tag callback function from the ones registered with
+                # the parser.
+                try:
+                    compile_func = self.tags[command]
+                except KeyError:
+                    self.invalid_block_tag(token, command, parse_until)
+                # Compile the callback into a node object and add it to
+                # the node list.
+                try:
+                    compiled_result = compile_func(self, token)
+                except Exception as e:
+>                   raise self.error(token, e)
+
+venv/lib/python3.10/site-packages/django/template/base.py:478: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <django.template.base.Parser object at 0x7bd626fb7880>, parse_until = []
+
+    def parse(self, parse_until=None):
+        """
+        Iterate through the parser tokens and compiles each one into a node.
+    
+        If parse_until is provided, parsing will stop once one of the
+        specified tokens has been reached. This is formatted as a list of
+        tokens, e.g. ['elif', 'else', 'endif']. If no matching token is
+        reached, raise an exception with the unclosed block tag details.
+        """
+        if parse_until is None:
+            parse_until = []
+        nodelist = NodeList()
+        while self.tokens:
+            token = self.next_token()
+            # Use the raw values here for TokenType.* for a tiny performance boost.
+            if token.token_type.value == 0:  # TokenType.TEXT
+                self.extend_nodelist(nodelist, TextNode(token.contents), token)
+            elif token.token_type.value == 1:  # TokenType.VAR
+                if not token.contents:
+                    raise self.error(token, 'Empty variable tag on line %d' % token.lineno)
+                try:
+                    filter_expression = self.compile_filter(token.contents)
+                except TemplateSyntaxError as e:
+                    raise self.error(token, e)
+                var_node = VariableNode(filter_expression)
+                self.extend_nodelist(nodelist, var_node, token)
+            elif token.token_type.value == 2:  # TokenType.BLOCK
+                try:
+                    command = token.contents.split()[0]
+                except IndexError:
+                    raise self.error(token, 'Empty block tag on line %d' % token.lineno)
+                if command in parse_until:
+                    # A matching token has been reached. Return control to
+                    # the caller. Put the token back on the token list so the
+                    # caller knows where it terminated.
+                    self.prepend_token(token)
+                    return nodelist
+                # Add the token to the command stack. This is used for error
+                # messages if further parsing fails due to an unclosed block
+                # tag.
+                self.command_stack.append((command, token))
+                # Get the tag callback function from the ones registered with
+                # the parser.
+                try:
+                    compile_func = self.tags[command]
+                except KeyError:
+                    self.invalid_block_tag(token, command, parse_until)
+                # Compile the callback into a node object and add it to
+                # the node list.
+                try:
+>                   compiled_result = compile_func(self, token)
+
+venv/lib/python3.10/site-packages/django/template/base.py:476: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+parser = <django.template.base.Parser object at 0x7bd626fb7880>
+token = <django.template.base.Token object at 0x7bd626fb4820>
+
+    @register.tag
+    def load(parser, token):
+        """
+        Load a custom template tag library into the parser.
+    
+        For example, to load the template tags in
+        ``django/templatetags/news/photos.py``::
+    
+            {% load news.photos %}
+    
+        Can also be used to load an individual tag/filter from
+        a library::
+    
+            {% load byline from news %}
+        """
+        # token.split_contents() isn't useful here because this tag doesn't accept variable as arguments
+        bits = token.contents.split()
+        if len(bits) >= 4 and bits[-2] == "from":
+            # from syntax is used; load individual tags from the library
+            name = bits[-1]
+            lib = find_library(parser, name)
+            subset = load_from_library(lib, name, bits[1:-2])
+            parser.add_library(subset)
+        else:
+            # one or more libraries are specified; load and add them to the parser
+            for name in bits[1:]:
+>               lib = find_library(parser, name)
+
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:1094: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+parser = <django.template.base.Parser object at 0x7bd626fb7880>
+name = 'django_bootstrap5'
+
+    def find_library(parser, name):
+        try:
+            return parser.libraries[name]
+        except KeyError:
+>           raise TemplateSyntaxError(
+                "'%s' is not a registered tag library. Must be one of:\n%s" % (
+                    name, "\n".join(sorted(parser.libraries)),
+                ),
+            )
+E           django.template.exceptions.TemplateSyntaxError: 'django_bootstrap5' is not a registered tag library. Must be one of:
+E           admin_list
+E           admin_modify
+E           admin_urls
+E           cache
+E           i18n
+E           l10n
+E           log
+E           static
+E           tz
+
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:1039: TemplateSyntaxError
+
+During handling of the above exception, another exception occurred:
+
+    def test_csrf_failure_view():
+        csrf_failure_view_setting = getattr(settings, "CSRF_FAILURE_VIEW", "")
+        module_name, function_name = csrf_failure_view_setting.rsplit(".", 1)
+        csrf_failure_view = None
+        try:
+            module = import_module(module_name)
+            csrf_failure_view = getattr(module, function_name, None)
+        except Exception:
+            pass
+        assert csrf_failure_view, (
+            "Убедитесь, что в `settings.py` задана настройка `CSRF_FAILURE_VIEW` и"
+            " что она указывает на существующую view-функцию."
+        )
+    
+        request = HttpRequest()
+        request.method = "POST"
+        request.POST = {}
+    
+        try:
+            response = csrf_failure_view(request)
+        except Exception:
+>           raise AssertionError(
+                f"Убедитесь, что view-функция `{csrf_failure_view_setting}`"
+                " работает без ошибок."
+            )
+E           AssertionError: Убедитесь, что view-функция `pages.views.csrf_failure` работает без ошибок.
+
+tests/test_err_pages.py:34: AssertionError
+___________________________ test_static_pages_as_cbv ___________________________
+
+    def test_static_pages_as_cbv():
+        try:
+            from pages import urls
+        except Exception as e:
+            raise AssertionError(
+                "Убедитесь, что в файле `pages/urls.py` нет ошибок. При его"
+                f" импорте возникла ошибка:\n{type(e).__name__}: {e}"
+            )
+        try:
+            from pages.urls import urlpatterns
+        except Exception:
+            raise AssertionError(
+                "Убедитесь, что в файле `pages/urls.py` задан список urlpatterns."
+            )
+        try:
+            from pages.urls import app_name
+        except Exception:
+            raise AssertionError(
+                "Убедитесь, что в файле `pages/urls.py` определена глобальная"
+                " переменная `app_name`, задающая пространство имён url для"
+                " приложения `pages`."
+            )
+        for path in urlpatterns:
+            if not hasattr(path.callback, "view_class"):
+>               raise AssertionError(
+                    "Убедитесь, что в файле `pages/urls.py` маршруты статических"
+                    " страниц подключены с помощью CBV."
+                )
+E               AssertionError: Убедитесь, что в файле `pages/urls.py` маршруты статических страниц подключены с помощью CBV.
+
+tests/test_static_pages.py:25: AssertionError
+=========================== short test summary info ============================
+ERROR tests/test_content.py::TestContent::test_unpublished - django.db.utils....
+ERROR tests/test_content.py::TestContent::test_only_own_pubs_in_category - dj...
+ERROR tests/test_content.py::TestContent::test_only_own_pubs_in_profile - dja...
+ERROR tests/test_content.py::TestContent::test_unpublished_category - django....
+ERROR tests/test_content.py::TestContent::test_future_posts - django.db.utils...
+ERROR tests/test_content.py::TestContent::test_pagination - django.db.utils.O...
+ERROR tests/test_content.py::TestContent::test_image_visible - django.db.util...
+ERROR tests/test_err_pages.py::test_custom_err_handlers - django.db.utils.Ope...
+ERROR tests/test_users.py::test_custom_err_handlers - django.db.utils.Operati...
+ERROR tests/test_users.py::test_profile - django.db.utils.OperationalError: n...
+ERROR tests/test_comment.py::test_comment_created_at - django.db.utils.Operat...
+ERROR tests/test_comment.py::test_comment - django.db.utils.OperationalError:...
+ERROR tests/test_comment.py::test_404_on_comment_deleted_post - django.db.uti...
+ERROR tests/test_post.py::test_post_created_at - django.db.utils.OperationalE...
+ERROR tests/test_post.py::test_post - django.db.utils.OperationalError: no su...
+==================== 2 failed, 8 passed, 15 errors in 2.43s ====================
