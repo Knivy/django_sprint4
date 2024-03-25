@@ -6,13 +6,13 @@ from django.views.generic import TemplateView  # type: ignore
 class About(TemplateView):
     """Описание проекта."""
 
-    template: str = 'pages/about.html'
+    template_name: str = 'pages/about.html'
 
 
 class Rules(TemplateView):
     """Правила проекта."""
 
-    template: str = 'pages/rules.html'
+    template_name: str = 'pages/rules.html'
 
 
 def page_not_found(request, exception) -> HttpResponse:
