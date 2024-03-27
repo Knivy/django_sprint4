@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404  # type: ignore
+from django.shortcuts import get_object_or_404, redirect  # type: ignore
 from django.db.models import QuerySet  # type: ignore
 from django.views.generic import CreateView  # type: ignore
 from django.views.generic import DeleteView, ListView, UpdateView
@@ -38,8 +38,14 @@ class PostDetailView(ListView):
         """Возвращает пост."""
         if 'post' not in self.__dict__:
             post: Post = get_object_or_404(
-                Post.objects.category_filter(),
-                pk=self.kwargs.get('id'))
+                Post,
+                pk=self.kwargs.get('id'),
+            )
+            if post.author != self.request.user:
+                post = get_object_or_404(
+                    Post.objects.category_filter(),
+                    pk=self.kwargs.get('id'),
+                )
             self.publication = post
         return self.publication
 
@@ -146,6 +152,10 @@ class OnlyAuthorMixin(UserPassesTestMixin):
         """Проверка на авторство."""
         object = self.get_object()
         return object.author == self.request.user
+
+    def handle_no_permission(self):
+        return redirect("blog:post_detail",
+                        id=self.kwargs.get('post_id'))
 
 
 class PostUpdateView(OnlyAuthorMixin, UpdateView):
