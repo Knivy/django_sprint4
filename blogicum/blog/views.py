@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy  # type: ignore
 
 from .models import Category, Comment, Post
-from .forms import CommentForm, PostForm
+from .forms import CommentForm, PostForm, ProfileForm
 
 
 NUM_ON_MAIN: int = 5  # Число новостей на главной странице.
@@ -95,16 +95,23 @@ class ProfileListView(ListView):
     paginate_by: int = 10
     template_name: str = 'blog/profile.html'
 
+    def get_author(self) -> object:
+        if 'author' not in self.__dict__:
+            author: object = get_object_or_404(
+                User,
+                username=self.kwargs.get('name_slug'))
+            self.author = author
+        return self.author
+
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о профиле пользователя."""
         context: dict = super().get_context_data(**kwargs)
-        context['profile'] = User.objects.filter(pk=self.kwargs.get('pk'))
+        context['profile'] = self.get_author()
         return context
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций данного автора."""
-        author = User.objects.filter(
-            pk=self.kwargs.get('pk'))
+        author = self.get_author()
         queryset: QuerySet = (
             Post.objects.
             select_related('author', 'category').
@@ -123,7 +130,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:profile", kwargs={"pk": self.author})
+        return reverse_lazy("blog:profile",
+                            kwargs={"name_slug": self.request.user.username})
 
     def form_valid(self, form):
         """Записать автора."""
@@ -143,9 +151,17 @@ class OnlyAuthorMixin(UserPassesTestMixin):
 class PostUpdateView(OnlyAuthorMixin, UpdateView):
     """Редактирование поста."""
 
-    model = Post
     form_class = PostForm
     template_name: str = 'blog/create.html'
+
+    def get_object(self):
+        return get_object_or_404(Post,
+                                 pk=self.kwargs.get('post_id'))
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:post_detail",
+                            kwargs={"id": self.kwargs.get('post_id')})
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
@@ -163,29 +179,70 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Записать автора."""
         form.instance.author = self.request.user
+        form.instance.post = get_object_or_404(Post,
+                                               pk=self.kwargs.get('post_id'))
         form.instance.post.comment_count += 1
+        form.instance.post.save()
         return super().form_valid(form)
 
 
 class CommentUpdateView(OnlyAuthorMixin, UpdateView):
     """Редактирование комментария."""
 
-    model = Comment
     form_class = CommentForm
     template_name: str = 'blog/comment.html'
 
+    def get_object(self):
+        return get_object_or_404(Comment,
+                                 pk=self.kwargs.get('comment_id'))
 
-class PostDeleteView(DeleteView):
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:post_detail",
+                            kwargs={"id": self.kwargs.get('post_id')})
+
+
+class PostDeleteView(OnlyAuthorMixin, DeleteView):
     """Удаление поста."""
 
-    model = Post
     template_name = 'blog/create.html'
-    success_url = reverse_lazy('blog:index')
+
+    def get_object(self):
+        return get_object_or_404(Post,
+                                 pk=self.kwargs.get('post_id'))
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:profile",
+                            kwargs={"name_slug": self.request.user.username})
 
 
-class CommentDeleteView(DeleteView):
+class CommentDeleteView(OnlyAuthorMixin, DeleteView):
     """Удаление комментария."""
 
-    model = Comment
     template_name = 'blog/comment.html'
-    success_url = reverse_lazy('blog:index')
+
+    def get_object(self):
+        return get_object_or_404(Comment,
+                                 pk=self.kwargs.get('comment_id'))
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:post_detail",
+                            kwargs={"id": self.kwargs.get('post_id')})
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """Редактирование профиля."""
+
+    form_class = ProfileForm
+    template_name: str = 'blog/user.html'
+
+    def get_object(self):
+        return get_object_or_404(User,
+                                 pk=self.request.user.pk)
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse_lazy("blog:profile",
+                            kwargs={"name_slug": self.request.user.username})
