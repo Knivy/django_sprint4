@@ -102,6 +102,7 @@ class ProfileListView(ListView):
     template_name: str = 'blog/profile.html'
 
     def get_author(self) -> object:
+        """Возвращает автора."""
         if 'author' not in self.__dict__:
             author: object = get_object_or_404(
                 User,
@@ -154,6 +155,7 @@ class OnlyAuthorMixin(UserPassesTestMixin):
         return object.author == self.request.user
 
     def handle_no_permission(self):
+        """Перенаправляет неавторов."""
         return redirect("blog:post_detail",
                         id=self.kwargs.get('post_id'))
 
@@ -165,6 +167,7 @@ class PostUpdateView(OnlyAuthorMixin, UpdateView):
     template_name: str = 'blog/create.html'
 
     def get_object(self):
+        """Возвращает пост."""
         return get_object_or_404(Post,
                                  pk=self.kwargs.get('post_id'))
 
@@ -203,6 +206,7 @@ class CommentUpdateView(OnlyAuthorMixin, UpdateView):
     template_name: str = 'blog/comment.html'
 
     def get_object(self):
+        """Возвращает комментарий."""
         return get_object_or_404(Comment,
                                  pk=self.kwargs.get('comment_id'))
 
@@ -218,6 +222,7 @@ class PostDeleteView(OnlyAuthorMixin, DeleteView):
     template_name = 'blog/create.html'
 
     def get_object(self):
+        """Возвращает пост."""
         return get_object_or_404(Post,
                                  pk=self.kwargs.get('post_id'))
 
@@ -233,6 +238,7 @@ class CommentDeleteView(OnlyAuthorMixin, DeleteView):
     template_name = 'blog/comment.html'
 
     def get_object(self):
+        """Возвращает комментарий."""
         return get_object_or_404(Comment,
                                  pk=self.kwargs.get('comment_id'))
 
@@ -249,6 +255,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name: str = 'blog/user.html'
 
     def get_object(self):
+        """Возвращает профиль."""
         return get_object_or_404(User,
                                  pk=self.request.user.pk)
 
