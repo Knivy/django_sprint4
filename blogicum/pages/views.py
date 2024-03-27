@@ -17,7 +17,7 @@ class Rules(TemplateView):
 
 def page_not_found(request, exception) -> HttpResponse:
     """Ошибка 404: Страница не найдена."""
-    return render(request, 'pages/404.html')
+    return render(request, 'pages/404.html', status=404)
 
 
 def csrf_failure(request, reason='') -> HttpResponse:
@@ -27,4 +27,4 @@ def csrf_failure(request, reason='') -> HttpResponse:
 
 def server_failure(request) -> HttpResponse:
     """Ошибка 500: Ошибка сервера."""
-    return render(request, 'pages/500.html')
+    return render(request, 'pages/500.html', status=500)

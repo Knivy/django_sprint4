@@ -11,7 +11,7 @@ from .models import Category, Comment, Post
 from .forms import CommentForm, PostForm, ProfileForm
 
 
-NUM_ON_MAIN: int = 5  # Число новостей на главной странице.
+NUM_IN_PAGE: int = 10  # Число новостей на странице.
 User = get_user_model()
 
 
@@ -23,7 +23,7 @@ class IndexListView(ListView):
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций."""
-        queryset: QuerySet = Post.objects.category_filter()[:NUM_ON_MAIN]
+        queryset: QuerySet = Post.objects.category_filter()
         return queryset
 
 
@@ -31,7 +31,7 @@ class PostDetailView(ListView):
     """Отдельный пост."""
 
     template_name: str = 'blog/detail.html'
-    paginate_by: int = 10
+    paginate_by: int = NUM_IN_PAGE
     context_object_name = 'comments'
 
     def get_post(self) -> Post:
@@ -63,7 +63,7 @@ class CategoryListView(ListView):
     """Категория постов."""
 
     template_name: str = 'blog/category.html'
-    paginate_by: int = 10
+    paginate_by: int = NUM_IN_PAGE
 
     def get_category(self) -> Category:
         """Возвращает категорию."""
@@ -92,7 +92,7 @@ class CategoryListView(ListView):
 class ProfileListView(ListView):
     """Страница пользователя со списком публикаций."""
 
-    paginate_by: int = 10
+    paginate_by: int = NUM_IN_PAGE
     template_name: str = 'blog/profile.html'
 
     def get_author(self) -> object:
