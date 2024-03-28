@@ -55,7 +55,7 @@ class PostDetailView(SingleObjectMixin, ListView):
         """Добавляет в контекст сведения о посте."""
         context: dict = super().get_context_data(**kwargs)
         context['post'] = self.object
-        context['comments'] = self.get_queryset()
+        context['comments'] = context['page_obj']
         if self.request.user.is_authenticated:
             context['form'] = CommentForm(self.request.POST or None)
         return context
