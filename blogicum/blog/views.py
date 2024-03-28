@@ -1,14 +1,14 @@
-from django.shortcuts import get_object_or_404, redirect  # type: ignore
+from django.shortcuts import get_object_or_404  # type: ignore
 from django.db.models import QuerySet  # type: ignore
 from django.views.generic import CreateView  # type: ignore
 from django.views.generic import DeleteView, ListView, UpdateView
 from django.contrib.auth import get_user_model  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.urls import reverse_lazy  # type: ignore
+from django.urls import reverse  # type: ignore
 
 from .models import Category, Comment, Post
 from .forms import CommentForm, PostForm, ProfileForm
+from .mixins import OnlyAuthorMixin
 
 
 NUM_IN_PAGE: int = 10  # Число новостей на странице.
@@ -19,32 +19,45 @@ class IndexListView(ListView):
     """Главная страница."""
 
     template_name: str = 'blog/index.html'
-    paginate_by: int = 10
+    paginate_by: int = NUM_IN_PAGE
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций."""
-        queryset: QuerySet = Post.objects.category_filter()
-        return queryset
+        return Post.objects.category_filter()
 
 
 class PostDetailView(ListView):
-    """Отдельный пост."""
+    """
+    Отдельный пост.
+
+    В качестве предка выбран ListView, поскольку он предоставляет
+    удобные средства для пагинации списка комментариев.
+    Согласно stackoverflow, в данном случае выбор между ListView и DetailView
+    является преимущественно делом вкуса.
+    https://stackoverflow.com/questions/9777121/django-generic-views-when-to-use-listview-vs-detailview
+    """
 
     template_name: str = 'blog/detail.html'
     paginate_by: int = NUM_IN_PAGE
     context_object_name = 'comments'
 
     def get_post(self) -> Post:
-        """Возвращает пост."""
+        """
+        Возвращает пост.
+
+        Поскольку выбран ListView, то get_object относится к комментарию,
+        а не посту, поэтому этот метод его не дублирует.
+        """
+        post_id = self.kwargs.get('post_id')
         if 'post' not in self.__dict__:
             post: Post = get_object_or_404(
                 Post.objects.annotate_comment_count(),
-                pk=self.kwargs.get('post_id'),
+                pk=post_id,
             )
             if post.author != self.request.user:
                 post = get_object_or_404(
                     Post.objects.category_filter(),
-                    pk=self.kwargs.get('post_id'),
+                    pk=post_id,
                 )
             self.publication = post
         return self.publication
@@ -138,8 +151,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:profile",
-                            kwargs={"name_slug": self.request.user.username})
+        return reverse('blog:profile',
+                       kwargs={'name_slug': self.request.user.username})
 
     def form_valid(self, form):
         """Записать автора."""
@@ -147,35 +160,13 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class OnlyAuthorMixin(UserPassesTestMixin):
-    """Проверка на авторство."""
-
-    def test_func(self):
-        """Проверка на авторство."""
-        object = self.get_object()
-        return object.author == self.request.user
-
-    def handle_no_permission(self):
-        """Перенаправляет неавторов."""
-        return redirect("blog:post_detail",
-                        post_id=self.kwargs.get('post_id'))
-
-
 class PostUpdateView(OnlyAuthorMixin, UpdateView):
     """Редактирование поста."""
 
+    model = Post
     form_class = PostForm
     template_name: str = 'blog/create.html'
-
-    def get_object(self):
-        """Возвращает пост."""
-        return get_object_or_404(Post,
-                                 pk=self.kwargs.get('post_id'))
-
-    def get_success_url(self):
-        """Переадресация."""
-        return reverse_lazy("blog:post_detail",
-                            kwargs={"post_id": self.kwargs.get('post_id')})
+    pk_url_kwarg = 'post_id'
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
@@ -187,8 +178,8 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:post_detail",
-                            kwargs={"post_id": self.kwargs.get('post_id')})
+        return reverse('blog:post_detail',
+                       kwargs={'post_id': self.kwargs.get('post_id')})
 
     def form_valid(self, form):
         """Записать автора."""
@@ -212,8 +203,8 @@ class CommentUpdateView(OnlyAuthorMixin, UpdateView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:post_detail",
-                            kwargs={"post_id": self.kwargs.get('post_id')})
+        return reverse('blog:post_detail',
+                       kwargs={'post_id': self.kwargs.get('post_id')})
 
 
 class PostDeleteView(OnlyAuthorMixin, DeleteView):
@@ -228,8 +219,8 @@ class PostDeleteView(OnlyAuthorMixin, DeleteView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:profile",
-                            kwargs={"name_slug": self.request.user.username})
+        return reverse('blog:profile',
+                       kwargs={'name_slug': self.request.user.username})
 
 
 class CommentDeleteView(OnlyAuthorMixin, DeleteView):
@@ -244,8 +235,8 @@ class CommentDeleteView(OnlyAuthorMixin, DeleteView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:post_detail",
-                            kwargs={"post_id": self.kwargs.get('post_id')})
+        return reverse('blog:post_detail',
+                       kwargs={'post_id': self.kwargs.get('post_id')})
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -261,5 +252,5 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """Переадресация."""
-        return reverse_lazy("blog:profile",
-                            kwargs={"name_slug": self.request.user.username})
+        return reverse('blog:profile',
+                       kwargs={'name_slug': self.request.user.username})
