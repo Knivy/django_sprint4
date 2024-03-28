@@ -1,14 +1,22 @@
 from datetime import datetime as dt  # type: ignore[import-untyped]
 
 from django.db.models import QuerySet  # type: ignore[import-untyped]
+from django.db.models import Count
 
 
 class CustomQuerySet(QuerySet):
     """Класс типовых запросов."""
 
+    def annotate_comment_count(self):
+        """Считает число комментариев к посту."""
+        return (self.prefetch_related('comments_for_post')
+                .annotate(comment_count=Count('comments_for_post'))
+                .order_by('-pub_date', 'title'))
+
     def publish_filter(self):
         """Запрос опубликованных постов с датой не позднее сейчас."""
         return (self
+                .annotate_comment_count()
                 .select_related('author', 'category')
                 .filter(
                     is_published=True,

@@ -111,8 +111,6 @@ class Post(BaseModel):
         verbose_name='Категория',
     )
     image = models.ImageField('Фото', upload_to='post_images', blank=True)
-    comment_count = models.IntegerField(default=0,
-                                        verbose_name='Число комментариев')
     objects = CustomQuerySet.as_manager()
 
     class Meta:
@@ -151,7 +149,3 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.text
-
-    def delete(self, *args, **kwargs):
-        self.post.comment_count -= 1
-        super().delete(*args, **kwargs)

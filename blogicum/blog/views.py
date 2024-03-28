@@ -38,7 +38,7 @@ class PostDetailView(ListView):
         """Возвращает пост."""
         if 'post' not in self.__dict__:
             post: Post = get_object_or_404(
-                Post,
+                Post.objects.annotate_comment_count(),
                 pk=self.kwargs.get('id'),
             )
             if post.author != self.request.user:
@@ -121,6 +121,7 @@ class ProfileListView(ListView):
         author = self.get_author()
         queryset: QuerySet = (
             Post.objects.
+            annotate_comment_count().
             select_related('author', 'category').
             filter(author=author))
         if self.request.user != author:
@@ -192,10 +193,9 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Записать автора."""
         form.instance.author = self.request.user
-        form.instance.post = get_object_or_404(Post,
-                                               pk=self.kwargs.get('post_id'))
-        form.instance.post.comment_count += 1
-        form.instance.post.save()
+        form.instance.post = get_object_or_404(
+            Post.objects.annotate_comment_count(),
+            pk=self.kwargs.get('post_id'))
         return super().form_valid(form)
 
 
