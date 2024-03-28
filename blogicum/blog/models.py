@@ -1,8 +1,9 @@
 from django.db import models  # type: ignore
-from django.contrib.auth import get_user_model  # type: ignore
 from django.urls import reverse  # type: ignore
+from django.contrib.auth import get_user_model  # type: ignore
 
 from .querysets import CustomQuerySet
+
 
 User = get_user_model()
 
@@ -149,3 +150,8 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.text
+
+    def get_absolute_url(self):
+        """Поскольку отдельной страницы комментария нет,
+        то перенаправление на страницу поста."""
+        return reverse('blog:post_detail', kwargs={'post_id': self.post.pk})

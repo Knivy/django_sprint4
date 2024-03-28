@@ -16,10 +16,10 @@ tests/test_err_pages.py::test_custom_err_handlers PASSED                 [ 32%]
 tests/test_users.py::test_custom_err_handlers PASSED                     [ 36%]
 tests/test_users.py::test_profile PASSED                                 [ 40%]
 tests/test_comment.py::test_comment_created_at PASSED                    [ 44%]
-tests/test_comment.py::test_comment FAILED                               [ 48%]
-tests/test_comment.py::test_404_on_comment_deleted_post FAILED           [ 52%]
+tests/test_comment.py::test_comment ERROR                                [ 48%]
+tests/test_comment.py::test_404_on_comment_deleted_post ERROR            [ 52%]
 tests/test_post.py::test_post_created_at PASSED                          [ 56%]
-tests/test_post.py::test_post PASSED                                     [ 60%]
+tests/test_post.py::test_post FAILED                                     [ 60%]
 tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`post` field] <- tests/conftest.py PASSED [ 64%]
 tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`author` field] <- tests/conftest.py PASSED [ 68%]
 tests/test_comment.py::TestCommentModelAttrs::test_model_attrs[`text` field] <- tests/conftest.py PASSED [ 72%]
@@ -31,1668 +31,324 @@ tests/test_post.py::TestPostModelAttrs::test_model_attrs[`image` field] <- tests
 tests/test_post.py::TestPostModelAttrs::test_model_attrs[`pub_date` field] <- tests/conftest.py PASSED [ 96%]
 tests/test_static_pages.py::test_static_pages_as_cbv PASSED              [100%]
 
+==================================== ERRORS ====================================
+________________________ ERROR at setup of test_comment ________________________
+
+user_client = <django.test.client.Client object at 0x7fea228a3730>
+post_with_published_location = <Post: From Able Box Here Own Raise>
+
+    @pytest.fixture
+    def post_comment_context_form_item(
+        user_client: Client, post_with_published_location
+    ) -> Tuple[str, BaseForm]:
+>       response = get_a_post_get_response_safely(
+            user_client, post_with_published_location.id
+        )
+
+tests/fixtures/posts.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/conftest.py:263: in get_a_post_get_response_safely
+    return get_get_response_safely(
+tests/conftest.py:254: in get_get_response_safely
+    response = user_client.get(url)
+venv/lib/python3.10/site-packages/django/test/client.py:742: in get
+    response = super().get(path, data=data, secure=secure, **extra)
+venv/lib/python3.10/site-packages/django/test/client.py:396: in get
+    return self.generic('GET', path, secure=secure, **{
+venv/lib/python3.10/site-packages/django/test/client.py:473: in generic
+    return self.request(**r)
+venv/lib/python3.10/site-packages/django/test/client.py:719: in request
+    self.check_exception(response)
+venv/lib/python3.10/site-packages/django/test/client.py:580: in check_exception
+    raise exc_value
+venv/lib/python3.10/site-packages/django/core/handlers/exception.py:47: in inner
+    response = get_response(request)
+venv/lib/python3.10/site-packages/django/core/handlers/base.py:204: in _get_response
+    response = response.render()
+venv/lib/python3.10/site-packages/django/template/response.py:105: in render
+    self.content = self.rendered_content
+venv/lib/python3.10/site-packages/django/template/response.py:83: in rendered_content
+    return template.render(context, self._request)
+venv/lib/python3.10/site-packages/django/template/backends/django.py:61: in render
+    return self.template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:170: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:150: in render
+    return compiled_parent._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:62: in render
+    result = block.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:195: in render
+    return template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:172: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ForNode: for comment in comments, tail_len: 13>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}, {'paginator': <django.core.paginator.Paginator object at 0x7fea...28a19f0>, 'post': <Post: From Able Box Here Own Raise>, 'form': <CommentForm bound=False, valid=False, fields=(text)>}]
+
+    def render(self, context):
+        if 'forloop' in context:
+            parentloop = context['forloop']
+        else:
+            parentloop = {}
+        with context.push():
+            values = self.sequence.resolve(context, ignore_failures=True)
+            if values is None:
+                values = []
+            if not hasattr(values, '__len__'):
+>               values = list(values)
+E               TypeError: 'Post' object is not iterable
+
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:170: TypeError
+______________ ERROR at setup of test_404_on_comment_deleted_post ______________
+
+user_client = <django.test.client.Client object at 0x7fea22c9ba60>
+post_with_published_location = <Post: Now Win Pretty Dog Door Support>
+
+    @pytest.fixture
+    def post_comment_context_form_item(
+        user_client: Client, post_with_published_location
+    ) -> Tuple[str, BaseForm]:
+>       response = get_a_post_get_response_safely(
+            user_client, post_with_published_location.id
+        )
+
+tests/fixtures/posts.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/conftest.py:263: in get_a_post_get_response_safely
+    return get_get_response_safely(
+tests/conftest.py:254: in get_get_response_safely
+    response = user_client.get(url)
+venv/lib/python3.10/site-packages/django/test/client.py:742: in get
+    response = super().get(path, data=data, secure=secure, **extra)
+venv/lib/python3.10/site-packages/django/test/client.py:396: in get
+    return self.generic('GET', path, secure=secure, **{
+venv/lib/python3.10/site-packages/django/test/client.py:473: in generic
+    return self.request(**r)
+venv/lib/python3.10/site-packages/django/test/client.py:719: in request
+    self.check_exception(response)
+venv/lib/python3.10/site-packages/django/test/client.py:580: in check_exception
+    raise exc_value
+venv/lib/python3.10/site-packages/django/core/handlers/exception.py:47: in inner
+    response = get_response(request)
+venv/lib/python3.10/site-packages/django/core/handlers/base.py:204: in _get_response
+    response = response.render()
+venv/lib/python3.10/site-packages/django/template/response.py:105: in render
+    self.content = self.rendered_content
+venv/lib/python3.10/site-packages/django/template/response.py:83: in rendered_content
+    return template.render(context, self._request)
+venv/lib/python3.10/site-packages/django/template/backends/django.py:61: in render
+    return self.template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:170: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:150: in render
+    return compiled_parent._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:62: in render
+    result = block.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:195: in render
+    return template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:172: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ForNode: for comment in comments, tail_len: 13>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}, {'paginator': <django.core.paginator.Paginator object at 0x7fea...1ff0>, 'post': <Post: Now Win Pretty Dog Door Support>, 'form': <CommentForm bound=False, valid=False, fields=(text)>}]
+
+    def render(self, context):
+        if 'forloop' in context:
+            parentloop = context['forloop']
+        else:
+            parentloop = {}
+        with context.push():
+            values = self.sequence.resolve(context, ignore_failures=True)
+            if values is None:
+                values = []
+            if not hasattr(values, '__len__'):
+>               values = list(values)
+E               TypeError: 'Post' object is not iterable
+
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:170: TypeError
 =================================== FAILURES ===================================
-_________________________________ test_comment _________________________________
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
-        with self.db.wrap_database_errors:
-            if params is None:
-                # params default might be backend specific.
-                return self.cursor.execute(sql)
-            else:
->               return self.cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x740a0ce3ce50>
-query = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (?, ?, ?, ?, ?)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-
-    def execute(self, query, params=None):
-        if params is None:
-            return Database.Cursor.execute(self, query)
-        query = self.convert_query(query)
->       return Database.Cursor.execute(self, query, params)
-E       sqlite3.IntegrityError: NOT NULL constraint failed: blog_comment.post_id
-
-venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: IntegrityError
-
-The above exception was the direct cause of the following exception:
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0ce31210>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0ce37790>
-assert_created = True
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        if not form.is_valid():
-            raise FormValidationException(form.errors)
-        elif form.errors:
-            raise FormValidationException(form.errors)
-    
-        items_before = set(qs.all())
-    
-        restored_data = restore_cleaned_data(form.cleaned_data)
-        try:
->           response = submitter.test_submit(
-                url=self._action, data=restored_data
-            )
-
-tests/form/base_form_tester.py:203: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0ce37790>
-url = '/posts/2/comment', data = {'text': 'Test create comment 1350528 text'}
-
-    def test_submit(self, url: str, data: dict) -> HttpResponse:
-        assert isinstance(self.client, django.test.Client)
->       response = self.client.post(url, data=data, follow=True)
-
-tests/form/base_form_tester.py:448: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0cf08460>
-path = '/posts/2/comment', data = {'text': 'Test create comment 1350528 text'}
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', follow = True
-secure = False, extra = {}
-
-    def post(self, path, data=None, content_type=MULTIPART_CONTENT,
-             follow=False, secure=False, **extra):
-        """Request a response from the server using POST."""
-        self.extra = extra
->       response = super().post(path, data=data, content_type=content_type, secure=secure, **extra)
-
-venv/lib/python3.10/site-packages/django/test/client.py:751: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0cf08460>
-path = '/posts/2/comment', data = {'text': 'Test create comment 1350528 text'}
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
-extra = {}
-post_data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="text"\r\n\r\nTest create comment 1350528 text\r\n--BoUnDaRyStRiNg--\r\n'
-
-    def post(self, path, data=None, content_type=MULTIPART_CONTENT,
-             secure=False, **extra):
-        """Construct a POST request."""
-        data = self._encode_json({} if data is None else data, content_type)
-        post_data = self._encode_data(data, content_type)
-    
->       return self.generic('POST', path, post_data, content_type,
-                            secure=secure, **extra)
-
-venv/lib/python3.10/site-packages/django/test/client.py:407: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0cf08460>, method = 'POST'
-path = '/posts/2/comment'
-data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="text"\r\n\r\nTest create comment 1350528 text\r\n--BoUnDaRyStRiNg--\r\n'
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
-extra = {}
-parsed = ParseResult(scheme='', netloc='', path='/posts/2/comment', params='', query='', fragment='')
-r = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'PATH_INFO': '/posts/2/comment', 'QUERY_STRING': '', ...}
-query_string = ''
-
-    def generic(self, method, path, data='',
-                content_type='application/octet-stream', secure=False,
-                **extra):
-        """Construct an arbitrary HTTP request."""
-        parsed = urlparse(str(path))  # path can be lazy
-        data = force_bytes(data, settings.DEFAULT_CHARSET)
-        r = {
-            'PATH_INFO': self._get_path(parsed),
-            'REQUEST_METHOD': method,
-            'SERVER_PORT': '443' if secure else '80',
-            'wsgi.url_scheme': 'https' if secure else 'http',
-        }
-        if data:
-            r.update({
-                'CONTENT_LENGTH': str(len(data)),
-                'CONTENT_TYPE': content_type,
-                'wsgi.input': FakePayload(data),
-            })
-        r.update(extra)
-        # If QUERY_STRING is absent or empty, we want to extract it from the URL.
-        if not r.get('QUERY_STRING'):
-            # WSGI requires latin-1 encoded strings. See get_path_info().
-            query_string = parsed[4].encode().decode('iso-8859-1')
-            r['QUERY_STRING'] = query_string
->       return self.request(**r)
-
-venv/lib/python3.10/site-packages/django/test/client.py:473: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0cf08460>
-request = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'PATH_INFO': '/posts/2/comment', 'QUERY_STRING': '', ...}
-environ = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'CSRF_COOKIE': 'xqH50qJoQCGG...ken=xqH50qJoQCGGvDrO9PY1Q4t5V2RqtrunPmzHHQKfqrFDdZ51TahFEqJXibDioMQf; sessionid=c7p141fkfsvuqlj0do04djpxjrddb1mb', ...}
-data = {'context': [[{'True': True, 'False': False, 'None': None}, {'csrf_token': <SimpleLazyObject: <function csrf.<locals>....>, <django.template.base.Template object at 0x740a0ce2ef20>, <django.template.base.Template object at 0x740a0ce608e0>]}
-on_template_render = functools.partial(<function store_rendered_templates at 0x740a0debd090>, {'templates': [<django.template.base.Template...rsor.executemany(self, query, param_list)', '', '    def convert_query(self, query):'], 'pre_context_lineno': 416}}]]})
-signal_uid = 'template-render-127586514848256'
-exception_uid = 'request-exception-127586514848256'
-response = <HttpResponse status_code=500, "text/html; charset=utf-8">
-
-    def request(self, **request):
-        """
-        The master request method. Compose the environment dictionary and pass
-        to the handler, return the result of the handler. Assume defaults for
-        the query environment, which can be overridden using the arguments to
-        the request.
-        """
-        environ = self._base_environ(**request)
-    
-        # Curry a data dictionary into an instance of the template renderer
-        # callback function.
-        data = {}
-        on_template_render = partial(store_rendered_templates, data)
-        signal_uid = "template-render-%s" % id(request)
-        signals.template_rendered.connect(on_template_render, dispatch_uid=signal_uid)
-        # Capture exceptions created by the handler.
-        exception_uid = "request-exception-%s" % id(request)
-        got_request_exception.connect(self.store_exc_info, dispatch_uid=exception_uid)
-        try:
-            response = self.handler(environ)
-        finally:
-            signals.template_rendered.disconnect(dispatch_uid=signal_uid)
-            got_request_exception.disconnect(dispatch_uid=exception_uid)
-        # Check for signaled exceptions.
->       self.check_exception(response)
-
-venv/lib/python3.10/site-packages/django/test/client.py:719: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0cf08460>
-response = <HttpResponse status_code=500, "text/html; charset=utf-8">
-
-    def check_exception(self, response):
-        """
-        Look for a signaled exception, clear the current context exception
-        data, re-raise the signaled exception, and clear the signaled exception
-        from the local cache.
-        """
-        response.exc_info = self.exc_info
-        if self.exc_info:
-            _, exc_value, _ = self.exc_info
-            self.exc_info = None
-            if self.raise_request_exception:
->               raise exc_value
-
-venv/lib/python3.10/site-packages/django/test/client.py:580: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-request = <WSGIRequest: POST '/posts/2/comment'>
-
-    @wraps(get_response)
-    def inner(request):
-        try:
->           response = get_response(request)
-
-venv/lib/python3.10/site-packages/django/core/handlers/exception.py:47: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.ClientHandler object at 0x740a0ce04610>
-request = <WSGIRequest: POST '/posts/2/comment'>
-
-    def _get_response(self, request):
-        """
-        Resolve and call the view, then apply view, exception, and
-        template_response middleware. This method is everything that happens
-        inside the request/response middleware.
-        """
-        response = None
-        callback, callback_args, callback_kwargs = self.resolve_request(request)
-    
-        # Apply view middleware
-        for middleware_method in self._view_middleware:
-            response = middleware_method(request, callback, callback_args, callback_kwargs)
-            if response:
-                break
-    
-        if response is None:
-            wrapped_callback = self.make_view_atomic(callback)
-            # If it is an asynchronous view, run it in a subthread.
-            if asyncio.iscoroutinefunction(wrapped_callback):
-                wrapped_callback = async_to_sync(wrapped_callback)
-            try:
->               response = wrapped_callback(request, *callback_args, **callback_kwargs)
-
-venv/lib/python3.10/site-packages/django/core/handlers/base.py:181: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-request = <WSGIRequest: POST '/posts/2/comment'>, args = ()
-kwargs = {'post_id': 2}
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-
-    def view(request, *args, **kwargs):
-        self = cls(**initkwargs)
-        self.setup(request, *args, **kwargs)
-        if not hasattr(self, 'request'):
-            raise AttributeError(
-                "%s instance has no 'request' attribute. Did you override "
-                "setup() and forget to call super()?" % cls.__name__
-            )
->       return self.dispatch(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/base.py:70: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-request = <WSGIRequest: POST '/posts/2/comment'>, args = ()
-kwargs = {'post_id': 2}
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
->       return super().dispatch(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/contrib/auth/mixins.py:71: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-request = <WSGIRequest: POST '/posts/2/comment'>, args = ()
-kwargs = {'post_id': 2}
-handler = <bound method BaseCreateView.post of <blog.views.CommentCreateView object at 0x740a0ce4f3a0>>
-
-    def dispatch(self, request, *args, **kwargs):
-        # Try to dispatch to the right method; if a method doesn't exist,
-        # defer to the error handler. Also defer to the error handler if the
-        # request method isn't on the approved list.
-        if request.method.lower() in self.http_method_names:
-            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
-        else:
-            handler = self.http_method_not_allowed
->       return handler(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/base.py:98: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-request = <WSGIRequest: POST '/posts/2/comment'>, args = ()
-kwargs = {'post_id': 2}
-
-    def post(self, request, *args, **kwargs):
-        self.object = None
->       return super().post(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:172: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-request = <WSGIRequest: POST '/posts/2/comment'>, args = ()
-kwargs = {'post_id': 2}
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
-        form = self.get_form()
-        if form.is_valid():
->           return self.form_valid(form)
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:142: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def form_valid(self, form):
-        """Записать автора."""
-        form.instance.author = self.request.user
->       return super().form_valid(form)
-
-blogicum/blog/views.py:196: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0ce4f3a0>
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def form_valid(self, form):
-        """If the form is valid, save the associated model."""
->       self.object = form.save()
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:125: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <CommentForm bound=True, valid=True, fields=(text)>, commit = True
-
-    def save(self, commit=True):
-        """
-        Save this form's self.instance object if commit=True. Otherwise, add
-        a save_m2m() method to the form which can be called after the instance
-        is saved manually at a later time. Return the model instance.
-        """
-        if self.errors:
-            raise ValueError(
-                "The %s could not be %s because the data didn't validate." % (
-                    self.instance._meta.object_name,
-                    'created' if self.instance._state.adding else 'changed',
-                )
-            )
-        if commit:
-            # If committing, save the instance and the m2m data immediately.
->           self.instance.save()
-
-venv/lib/python3.10/site-packages/django/forms/models.py:468: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1350528 text>, force_insert = False
-force_update = False, using = 'default', update_fields = None
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        """
-        Save the current instance. Override this in a subclass if you want to
-        control the saving process.
-    
-        The 'force_insert' and 'force_update' parameters can be used to insist
-        that the "save" must be an SQL insert or update (or equivalent for
-        non-SQL backends), respectively. Normally, they should not be set.
-        """
-        self._prepare_related_fields_for_save(operation_name='save')
-    
-        using = using or router.db_for_write(self.__class__, instance=self)
-        if force_insert and (force_update or update_fields):
-            raise ValueError("Cannot force both insert and updating in model saving.")
-    
-        deferred_fields = self.get_deferred_fields()
-        if update_fields is not None:
-            # If update_fields is empty, skip the save. We do also check for
-            # no-op saves later on for inheritance cases. This bailout is
-            # still needed for skipping signal sending.
-            if not update_fields:
-                return
-    
-            update_fields = frozenset(update_fields)
-            field_names = set()
-    
-            for field in self._meta.concrete_fields:
-                if not field.primary_key:
-                    field_names.add(field.name)
-    
-                    if field.name != field.attname:
-                        field_names.add(field.attname)
-    
-            non_model_fields = update_fields.difference(field_names)
-    
-            if non_model_fields:
-                raise ValueError(
-                    'The following fields do not exist in this model, are m2m '
-                    'fields, or are non-concrete fields: %s'
-                    % ', '.join(non_model_fields)
-                )
-    
-        # If saving to the same database, and this model is deferred, then
-        # automatically do an "update_fields" save on the loaded fields.
-        elif not force_insert and deferred_fields and using == self._state.db:
-            field_names = set()
-            for field in self._meta.concrete_fields:
-                if not field.primary_key and not hasattr(field, 'through'):
-                    field_names.add(field.attname)
-            loaded_fields = field_names.difference(deferred_fields)
-            if loaded_fields:
-                update_fields = frozenset(loaded_fields)
-    
->       self.save_base(using=using, force_insert=force_insert,
-                       force_update=force_update, update_fields=update_fields)
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:739: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1350528 text>, raw = False
-force_insert = False, force_update = False, using = 'default'
-update_fields = None
-
-    def save_base(self, raw=False, force_insert=False,
-                  force_update=False, using=None, update_fields=None):
-        """
-        Handle the parts of saving which should be done only once per save,
-        yet need to be done in raw saves, too. This includes some sanity
-        checks and signal sending.
-    
-        The 'raw' argument is telling save_base not to save any parent
-        models and not to do any changes to the values before save. This
-        is used by fixture loading.
-        """
-        using = using or router.db_for_write(self.__class__, instance=self)
-        assert not (force_insert and (force_update or update_fields))
-        assert update_fields is None or update_fields
-        cls = origin = self.__class__
-        # Skip proxies, but keep the origin as the proxy model.
-        if cls._meta.proxy:
-            cls = cls._meta.concrete_model
-        meta = cls._meta
-        if not meta.auto_created:
-            pre_save.send(
-                sender=origin, instance=self, raw=raw, using=using,
-                update_fields=update_fields,
-            )
-        # A transaction isn't needed if one query is issued.
-        if meta.parents:
-            context_manager = transaction.atomic(using=using, savepoint=False)
-        else:
-            context_manager = transaction.mark_for_rollback_on_error(using=using)
-        with context_manager:
-            parent_inserted = False
-            if not raw:
-                parent_inserted = self._save_parents(cls, using, update_fields)
->           updated = self._save_table(
-                raw, cls, force_insert or parent_inserted,
-                force_update, using, update_fields,
-            )
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:776: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1350528 text>, raw = False
-cls = <class 'blog.models.Comment'>, force_insert = False, force_update = False
-using = 'default', update_fields = None
-
-    def _save_table(self, raw=False, cls=None, force_insert=False,
-                    force_update=False, using=None, update_fields=None):
-        """
-        Do the heavy-lifting involved in saving. Update or insert the data
-        for a single table.
-        """
-        meta = cls._meta
-        non_pks = [f for f in meta.local_concrete_fields if not f.primary_key]
-    
-        if update_fields:
-            non_pks = [f for f in non_pks
-                       if f.name in update_fields or f.attname in update_fields]
-    
-        pk_val = self._get_pk_val(meta)
-        if pk_val is None:
-            pk_val = meta.pk.get_pk_value_on_save(self)
-            setattr(self, meta.pk.attname, pk_val)
-        pk_set = pk_val is not None
-        if not pk_set and (force_update or update_fields):
-            raise ValueError("Cannot force an update in save() with no primary key.")
-        updated = False
-        # Skip an UPDATE when adding an instance and primary key has a default.
-        if (
-            not raw and
-            not force_insert and
-            self._state.adding and
-            meta.pk.default and
-            meta.pk.default is not NOT_PROVIDED
-        ):
-            force_insert = True
-        # If possible, try an UPDATE. If that doesn't update anything, do an INSERT.
-        if pk_set and not force_insert:
-            base_qs = cls._base_manager.using(using)
-            values = [(f, None, (getattr(self, f.attname) if raw else f.pre_save(self, False)))
-                      for f in non_pks]
-            forced_update = update_fields or force_update
-            updated = self._do_update(base_qs, using, pk_val, values, update_fields,
-                                      forced_update)
-            if force_update and not updated:
-                raise DatabaseError("Forced update did not affect any rows.")
-            if update_fields and not updated:
-                raise DatabaseError("Save with update_fields did not affect any rows.")
-        if not updated:
-            if meta.order_with_respect_to:
-                # If this is a model with an order_with_respect_to
-                # autopopulate the _order field
-                field = meta.order_with_respect_to
-                filter_args = field.get_filter_kwargs_for_object(self)
-                self._order = cls._base_manager.using(using).filter(**filter_args).aggregate(
-                    _order__max=Coalesce(
-                        ExpressionWrapper(Max('_order') + Value(1), output_field=IntegerField()),
-                        Value(0),
-                    ),
-                )['_order__max']
-            fields = meta.local_concrete_fields
-            if not pk_set:
-                fields = [f for f in fields if f is not meta.auto_field]
-    
-            returning_fields = meta.db_returning_fields
->           results = self._do_insert(cls._base_manager, using, fields, returning_fields, raw)
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:881: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1350528 text>
-manager = <django.db.models.manager.Manager object at 0x740a0d4c1000>
-using = 'default'
-fields = [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>, <django.db...Field: text>, <django.db.models.fields.related.ForeignKey: author>, <django.db.models.fields.related.ForeignKey: post>]
-returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
-
-    def _do_insert(self, manager, using, fields, returning_fields, raw):
-        """
-        Do an INSERT. If returning_fields is defined then this method should
-        return the newly created data for the model.
-        """
->       return manager._insert(
-            [self], fields=fields, returning_fields=returning_fields,
-            using=using, raw=raw,
-        )
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:919: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.models.manager.Manager object at 0x740a0d4c1000>
-args = ([<Comment: Test create comment 1350528 text>],)
-kwargs = {'fields': [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>,...ForeignKey: post>], 'raw': False, 'returning_fields': [<django.db.models.fields.BigAutoField: id>], 'using': 'default'}
-
-    def manager_method(self, *args, **kwargs):
->       return getattr(self.get_queryset(), name)(*args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/db/models/manager.py:85: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <QuerySet []>, objs = [<Comment: Test create comment 1350528 text>]
-fields = [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>, <django.db...Field: text>, <django.db.models.fields.related.ForeignKey: author>, <django.db.models.fields.related.ForeignKey: post>]
-returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
-using = 'default', ignore_conflicts = False
-
-    def _insert(self, objs, fields, returning_fields=None, raw=False, using=None, ignore_conflicts=False):
-        """
-        Insert a new record for the given model. This provides an interface to
-        the InsertQuery class and is how Model.save() is implemented.
-        """
-        self._for_write = True
-        if using is None:
-            using = self.db
-        query = sql.InsertQuery(self.model, ignore_conflicts=ignore_conflicts)
-        query.insert_values(fields, objs, raw=raw)
->       return query.get_compiler(using=using).execute_sql(returning_fields)
-
-venv/lib/python3.10/site-packages/django/db/models/query.py:1270: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.models.sql.compiler.SQLInsertCompiler object at 0x740a0ce4f550>
-returning_fields = [<django.db.models.fields.BigAutoField: id>]
-
-    def execute_sql(self, returning_fields=None):
-        assert not (
-            returning_fields and len(self.query.objs) != 1 and
-            not self.connection.features.can_return_rows_from_bulk_insert
-        )
-        self.returning_fields = returning_fields
-        with self.connection.cursor() as cursor:
-            for sql, params in self.as_sql():
->               cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1416: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-
-    def execute(self, sql, params=None):
->       return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-many = False
-executor = <bound method CursorWrapper._execute of <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>>
-
-    def _execute_with_wrappers(self, sql, params, many, executor):
-        context = {'connection': self.db, 'cursor': self}
-        for wrapper in reversed(self.db.execute_wrappers):
-            executor = functools.partial(wrapper, executor)
->       return executor(sql, params, many, context)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
->       with self.db.wrap_database_errors:
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.utils.DatabaseErrorWrapper object at 0x740a0d5377f0>
-exc_type = <class 'sqlite3.IntegrityError'>
-exc_value = IntegrityError('NOT NULL constraint failed: blog_comment.post_id')
-traceback = <traceback object at 0x740a0ce57b80>
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            return
-        for dj_exc_type in (
-                DataError,
-                OperationalError,
-                IntegrityError,
-                InternalError,
-                ProgrammingError,
-                NotSupportedError,
-                DatabaseError,
-                InterfaceError,
-                Error,
-        ):
-            db_exc_type = getattr(self.wrapper.Database, dj_exc_type.__name__)
-            if issubclass(exc_type, db_exc_type):
-                dj_exc_value = dj_exc_type(*exc_value.args)
-                # Only set the 'errors_occurred' flag for errors that may make
-                # the connection unusable.
-                if dj_exc_type not in (DataError, IntegrityError):
-                    self.wrapper.errors_occurred = True
->               raise dj_exc_value.with_traceback(traceback) from exc_value
-
-venv/lib/python3.10/site-packages/django/db/utils.py:90: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0ce4f4f0>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
-        with self.db.wrap_database_errors:
-            if params is None:
-                # params default might be backend specific.
-                return self.cursor.execute(sql)
-            else:
->               return self.cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x740a0ce3ce50>
-query = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (?, ?, ?, ?, ?)'
-params = [True, '2024-03-28 12:08:14.397985', 'Test create comment 1350528 text', 4, None]
-
-    def execute(self, query, params=None):
-        if params is None:
-            return Database.Cursor.execute(self, query)
-        query = self.convert_query(query)
->       return Database.Cursor.execute(self, query, params)
-E       django.db.utils.IntegrityError: NOT NULL constraint failed: blog_comment.post_id
-
-venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: IntegrityError
-
-The above exception was the direct cause of the following exception:
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0ce31210>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0ce37790>
-assert_created = True
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        try:
->           return super().try_create_item(form, qs, submitter, assert_created)
-
-tests/form/comment/create_form_tester.py:83: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0ce31210>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0ce37790>
-assert_created = True
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        if not form.is_valid():
-            raise FormValidationException(form.errors)
-        elif form.errors:
-            raise FormValidationException(form.errors)
-    
-        items_before = set(qs.all())
-    
-        restored_data = restore_cleaned_data(form.cleaned_data)
-        try:
-            response = submitter.test_submit(
-                url=self._action, data=restored_data
-            )
-        except Exception as e:
->           raise FormValidationException(e) from e
-E           form.base_form_tester.FormValidationException: NOT NULL constraint failed: blog_comment.post_id
-
-tests/form/base_form_tester.py:207: FormValidationException
-
-The above exception was the direct cause of the following exception:
-
-user_client = <django.test.client.Client object at 0x740a0cf08460>
-another_user_client = <django.test.client.Client object at 0x740a0ce05d20>
-unlogged_client = <django.test.client.Client object at 0x740a0ce05e70>
-post_with_published_location = <Post: Prevent Save Both Everybody Question Yes>
-another_user = <User: wmay>
-post_comment_context_form_item = KeyVal(key='form', val=<CommentForm bound=False, valid=False, fields=(text)>)
-CommentModel = <class 'blog.models.Comment'>
+__________________________________ test_post ___________________________________
+
+published_category = <Category: Maybe Focus Many Protect Society Program>
+published_location = <Location: Kerri Ho DVM>
+user_client = <django.test.client.Client object at 0x7fea2246df00>
+another_user_client = <django.test.client.Client object at 0x7fea2246cc10>
+unlogged_client = <django.test.client.Client object at 0x7fea2246e800>
+comment_to_a_post = <Comment: Executive always and reveal church. Anything heart employee pick represent media when. Word dream however moment movement enough claim company.>
+create_post_context_form_item = KeyVal(key='form', val=<PostForm bound=False, valid=False, fields=(title;text;pub_date;location;category;image)>)
+PostModel = <class 'blog.models.Post'>
 CommentModelAdapter = <class 'adapters.comment.CommentModelAdapter.<locals>._CommentModelAdapter'>
-profile_content_tester = <test_content.ProfilePostContentTester object at 0x740a0cf9d810>
+main_content_tester = <test_content.MainPostContentTester object at 0x7fea22b46380>
 
     @pytest.mark.django_db(transaction=True)
-    def test_comment(
+    def test_post(
+            published_category: Model,
+            published_location: Model,
             user_client: django.test.Client,
             another_user_client: django.test.Client,
             unlogged_client: django.test.Client,
-            post_with_published_location: Any,
-            another_user: Model,
-            post_comment_context_form_item: Tuple[str, BaseForm],
-            CommentModel: Type[Model],
+            comment_to_a_post: Model,
+            create_post_context_form_item: Tuple[str, BaseForm],
+            PostModel: Type[Model],
             CommentModelAdapter: CommentModelAdapterT,
-            profile_content_tester: ProfilePostContentTester
+            main_content_tester: MainPostContentTester
     ):
-        post_with_published_location.author = another_user
-        post_with_published_location.save()
-        _, ctx_form = post_comment_context_form_item
-        a_post_get_response = get_a_post_get_response_safely(
-            user_client, post_with_published_location.id
+        _, ctx_form = create_post_context_form_item
+    
+        create_a_post_get_response = get_create_a_post_get_response_safely(
+            user_client
         )
     
-        # create comments
-        creation_tester = CreateCommentFormTester(
-            a_post_get_response,
-            CommentModel,
-            user_client,
+        response_on_created, created_items = _test_create_items(
+            PostModel,
+            PostModelAdapter,
             another_user_client,
+            create_a_post_get_response,
+            ctx_form,
+            published_category,
+            published_location,
             unlogged_client,
-            item_adapter=None,
-            ModelAdapter=CommentModelAdapter,
-        )
-    
-        Form: Type[BaseForm] = type(ctx_form)
-        forms_to_create = create_comment_creation_forms(
-            creation_tester, Form, CommentModel, CommentModelAdapter)
-    
->       response_on_created, created_items = creation_tester.test_create_several(
-            forms_to_create[1:], qs=CommentModel.objects.all()
-        )
-
-tests/test_comment.py:135: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/form/base_form_tester.py:294: in test_create_several
-    response, created = self.test_create_item(
-tests/form/base_form_tester.py:264: in test_create_item
-    response, created = self.try_create_item(
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0ce31210>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0ce37790>
-assert_created = True
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        try:
-            return super().try_create_item(form, qs, submitter, assert_created)
-        except FormValidationException as e:
->           raise AssertionError(
-                "При создании комментария возникает ошибка:\n"
-                f"{type(e).__name__}: {e}"
-            ) from e
-E           AssertionError: При создании комментария возникает ошибка:
-E           FormValidationException: NOT NULL constraint failed: blog_comment.post_id
-
-tests/form/comment/create_form_tester.py:85: AssertionError
-_______________________ test_404_on_comment_deleted_post _______________________
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
-        with self.db.wrap_database_errors:
-            if params is None:
-                # params default might be backend specific.
-                return self.cursor.execute(sql)
-            else:
->               return self.cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x740a0cf13ac0>
-query = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (?, ?, ?, ?, ?)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-
-    def execute(self, query, params=None):
-        if params is None:
-            return Database.Cursor.execute(self, query)
-        query = self.convert_query(query)
->       return Database.Cursor.execute(self, query, params)
-E       sqlite3.IntegrityError: NOT NULL constraint failed: blog_comment.post_id
-
-venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: IntegrityError
-
-The above exception was the direct cause of the following exception:
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0cad9ab0>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0d40b790>
-assert_created = False
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        if not form.is_valid():
-            raise FormValidationException(form.errors)
-        elif form.errors:
-            raise FormValidationException(form.errors)
-    
-        items_before = set(qs.all())
-    
-        restored_data = restore_cleaned_data(form.cleaned_data)
-        try:
->           response = submitter.test_submit(
-                url=self._action, data=restored_data
-            )
-
-tests/form/base_form_tester.py:203: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0d40b790>
-url = '/posts/3/comment', data = {'text': 'Test create comment 1494119 text'}
-
-    def test_submit(self, url: str, data: dict) -> HttpResponse:
-        assert isinstance(self.client, django.test.Client)
->       response = self.client.post(url, data=data, follow=True)
-
-tests/form/base_form_tester.py:448: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0c8a9870>
-path = '/posts/3/comment', data = {'text': 'Test create comment 1494119 text'}
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', follow = True
-secure = False, extra = {}
-
-    def post(self, path, data=None, content_type=MULTIPART_CONTENT,
-             follow=False, secure=False, **extra):
-        """Request a response from the server using POST."""
-        self.extra = extra
->       response = super().post(path, data=data, content_type=content_type, secure=secure, **extra)
-
-venv/lib/python3.10/site-packages/django/test/client.py:751: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0c8a9870>
-path = '/posts/3/comment', data = {'text': 'Test create comment 1494119 text'}
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
-extra = {}
-post_data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="text"\r\n\r\nTest create comment 1494119 text\r\n--BoUnDaRyStRiNg--\r\n'
-
-    def post(self, path, data=None, content_type=MULTIPART_CONTENT,
-             secure=False, **extra):
-        """Construct a POST request."""
-        data = self._encode_json({} if data is None else data, content_type)
-        post_data = self._encode_data(data, content_type)
-    
->       return self.generic('POST', path, post_data, content_type,
-                            secure=secure, **extra)
-
-venv/lib/python3.10/site-packages/django/test/client.py:407: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0c8a9870>, method = 'POST'
-path = '/posts/3/comment'
-data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="text"\r\n\r\nTest create comment 1494119 text\r\n--BoUnDaRyStRiNg--\r\n'
-content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
-extra = {}
-parsed = ParseResult(scheme='', netloc='', path='/posts/3/comment', params='', query='', fragment='')
-r = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'PATH_INFO': '/posts/3/comment', 'QUERY_STRING': '', ...}
-query_string = ''
-
-    def generic(self, method, path, data='',
-                content_type='application/octet-stream', secure=False,
-                **extra):
-        """Construct an arbitrary HTTP request."""
-        parsed = urlparse(str(path))  # path can be lazy
-        data = force_bytes(data, settings.DEFAULT_CHARSET)
-        r = {
-            'PATH_INFO': self._get_path(parsed),
-            'REQUEST_METHOD': method,
-            'SERVER_PORT': '443' if secure else '80',
-            'wsgi.url_scheme': 'https' if secure else 'http',
-        }
-        if data:
-            r.update({
-                'CONTENT_LENGTH': str(len(data)),
-                'CONTENT_TYPE': content_type,
-                'wsgi.input': FakePayload(data),
-            })
-        r.update(extra)
-        # If QUERY_STRING is absent or empty, we want to extract it from the URL.
-        if not r.get('QUERY_STRING'):
-            # WSGI requires latin-1 encoded strings. See get_path_info().
-            query_string = parsed[4].encode().decode('iso-8859-1')
-            r['QUERY_STRING'] = query_string
->       return self.request(**r)
-
-venv/lib/python3.10/site-packages/django/test/client.py:473: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0c8a9870>
-request = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'PATH_INFO': '/posts/3/comment', 'QUERY_STRING': '', ...}
-environ = {'CONTENT_LENGTH': '119', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'CSRF_COOKIE': '2p9BYKbC3GuA...ken=2p9BYKbC3GuAwjKn4j9RASzffweCa5Vgr9v1F690CYj0D2pTtv1rP1A22OxJKq2K; sessionid=xaeybabcsg2vkqtd9nhjgjb1uuq5l6be', ...}
-data = {'context': [[{'True': True, 'False': False, 'None': None}, {'csrf_token': <SimpleLazyObject: <function csrf.<locals>....>, <django.template.base.Template object at 0x740a0c8bb6d0>, <django.template.base.Template object at 0x740a0d2dbb50>]}
-on_template_render = functools.partial(<function store_rendered_templates at 0x740a0debd090>, {'templates': [<django.template.base.Template...rsor.executemany(self, query, param_list)', '', '    def convert_query(self, query):'], 'pre_context_lineno': 416}}]]})
-signal_uid = 'template-render-127586522859200'
-exception_uid = 'request-exception-127586522859200'
-response = <HttpResponse status_code=500, "text/html; charset=utf-8">
-
-    def request(self, **request):
-        """
-        The master request method. Compose the environment dictionary and pass
-        to the handler, return the result of the handler. Assume defaults for
-        the query environment, which can be overridden using the arguments to
-        the request.
-        """
-        environ = self._base_environ(**request)
-    
-        # Curry a data dictionary into an instance of the template renderer
-        # callback function.
-        data = {}
-        on_template_render = partial(store_rendered_templates, data)
-        signal_uid = "template-render-%s" % id(request)
-        signals.template_rendered.connect(on_template_render, dispatch_uid=signal_uid)
-        # Capture exceptions created by the handler.
-        exception_uid = "request-exception-%s" % id(request)
-        got_request_exception.connect(self.store_exc_info, dispatch_uid=exception_uid)
-        try:
-            response = self.handler(environ)
-        finally:
-            signals.template_rendered.disconnect(dispatch_uid=signal_uid)
-            got_request_exception.disconnect(dispatch_uid=exception_uid)
-        # Check for signaled exceptions.
->       self.check_exception(response)
-
-venv/lib/python3.10/site-packages/django/test/client.py:719: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.Client object at 0x740a0c8a9870>
-response = <HttpResponse status_code=500, "text/html; charset=utf-8">
-
-    def check_exception(self, response):
-        """
-        Look for a signaled exception, clear the current context exception
-        data, re-raise the signaled exception, and clear the signaled exception
-        from the local cache.
-        """
-        response.exc_info = self.exc_info
-        if self.exc_info:
-            _, exc_value, _ = self.exc_info
-            self.exc_info = None
-            if self.raise_request_exception:
->               raise exc_value
-
-venv/lib/python3.10/site-packages/django/test/client.py:580: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-request = <WSGIRequest: POST '/posts/3/comment'>
-
-    @wraps(get_response)
-    def inner(request):
-        try:
->           response = get_response(request)
-
-venv/lib/python3.10/site-packages/django/core/handlers/exception.py:47: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.test.client.ClientHandler object at 0x740a0c8a9450>
-request = <WSGIRequest: POST '/posts/3/comment'>
-
-    def _get_response(self, request):
-        """
-        Resolve and call the view, then apply view, exception, and
-        template_response middleware. This method is everything that happens
-        inside the request/response middleware.
-        """
-        response = None
-        callback, callback_args, callback_kwargs = self.resolve_request(request)
-    
-        # Apply view middleware
-        for middleware_method in self._view_middleware:
-            response = middleware_method(request, callback, callback_args, callback_kwargs)
-            if response:
-                break
-    
-        if response is None:
-            wrapped_callback = self.make_view_atomic(callback)
-            # If it is an asynchronous view, run it in a subthread.
-            if asyncio.iscoroutinefunction(wrapped_callback):
-                wrapped_callback = async_to_sync(wrapped_callback)
-            try:
->               response = wrapped_callback(request, *callback_args, **callback_kwargs)
-
-venv/lib/python3.10/site-packages/django/core/handlers/base.py:181: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-request = <WSGIRequest: POST '/posts/3/comment'>, args = ()
-kwargs = {'post_id': 3}
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-
-    def view(request, *args, **kwargs):
-        self = cls(**initkwargs)
-        self.setup(request, *args, **kwargs)
-        if not hasattr(self, 'request'):
-            raise AttributeError(
-                "%s instance has no 'request' attribute. Did you override "
-                "setup() and forget to call super()?" % cls.__name__
-            )
->       return self.dispatch(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/base.py:70: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-request = <WSGIRequest: POST '/posts/3/comment'>, args = ()
-kwargs = {'post_id': 3}
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
->       return super().dispatch(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/contrib/auth/mixins.py:71: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-request = <WSGIRequest: POST '/posts/3/comment'>, args = ()
-kwargs = {'post_id': 3}
-handler = <bound method BaseCreateView.post of <blog.views.CommentCreateView object at 0x740a0cad1990>>
-
-    def dispatch(self, request, *args, **kwargs):
-        # Try to dispatch to the right method; if a method doesn't exist,
-        # defer to the error handler. Also defer to the error handler if the
-        # request method isn't on the approved list.
-        if request.method.lower() in self.http_method_names:
-            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
-        else:
-            handler = self.http_method_not_allowed
->       return handler(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/base.py:98: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-request = <WSGIRequest: POST '/posts/3/comment'>, args = ()
-kwargs = {'post_id': 3}
-
-    def post(self, request, *args, **kwargs):
-        self.object = None
->       return super().post(request, *args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:172: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-request = <WSGIRequest: POST '/posts/3/comment'>, args = ()
-kwargs = {'post_id': 3}
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
-        form = self.get_form()
-        if form.is_valid():
->           return self.form_valid(form)
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:142: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def form_valid(self, form):
-        """Записать автора."""
-        form.instance.author = self.request.user
->       return super().form_valid(form)
-
-blogicum/blog/views.py:196: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <blog.views.CommentCreateView object at 0x740a0cad1990>
-form = <CommentForm bound=True, valid=True, fields=(text)>
-
-    def form_valid(self, form):
-        """If the form is valid, save the associated model."""
->       self.object = form.save()
-
-venv/lib/python3.10/site-packages/django/views/generic/edit.py:125: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <CommentForm bound=True, valid=True, fields=(text)>, commit = True
-
-    def save(self, commit=True):
-        """
-        Save this form's self.instance object if commit=True. Otherwise, add
-        a save_m2m() method to the form which can be called after the instance
-        is saved manually at a later time. Return the model instance.
-        """
-        if self.errors:
-            raise ValueError(
-                "The %s could not be %s because the data didn't validate." % (
-                    self.instance._meta.object_name,
-                    'created' if self.instance._state.adding else 'changed',
-                )
-            )
-        if commit:
-            # If committing, save the instance and the m2m data immediately.
->           self.instance.save()
-
-venv/lib/python3.10/site-packages/django/forms/models.py:468: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1494119 text>, force_insert = False
-force_update = False, using = 'default', update_fields = None
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        """
-        Save the current instance. Override this in a subclass if you want to
-        control the saving process.
-    
-        The 'force_insert' and 'force_update' parameters can be used to insist
-        that the "save" must be an SQL insert or update (or equivalent for
-        non-SQL backends), respectively. Normally, they should not be set.
-        """
-        self._prepare_related_fields_for_save(operation_name='save')
-    
-        using = using or router.db_for_write(self.__class__, instance=self)
-        if force_insert and (force_update or update_fields):
-            raise ValueError("Cannot force both insert and updating in model saving.")
-    
-        deferred_fields = self.get_deferred_fields()
-        if update_fields is not None:
-            # If update_fields is empty, skip the save. We do also check for
-            # no-op saves later on for inheritance cases. This bailout is
-            # still needed for skipping signal sending.
-            if not update_fields:
-                return
-    
-            update_fields = frozenset(update_fields)
-            field_names = set()
-    
-            for field in self._meta.concrete_fields:
-                if not field.primary_key:
-                    field_names.add(field.name)
-    
-                    if field.name != field.attname:
-                        field_names.add(field.attname)
-    
-            non_model_fields = update_fields.difference(field_names)
-    
-            if non_model_fields:
-                raise ValueError(
-                    'The following fields do not exist in this model, are m2m '
-                    'fields, or are non-concrete fields: %s'
-                    % ', '.join(non_model_fields)
-                )
-    
-        # If saving to the same database, and this model is deferred, then
-        # automatically do an "update_fields" save on the loaded fields.
-        elif not force_insert and deferred_fields and using == self._state.db:
-            field_names = set()
-            for field in self._meta.concrete_fields:
-                if not field.primary_key and not hasattr(field, 'through'):
-                    field_names.add(field.attname)
-            loaded_fields = field_names.difference(deferred_fields)
-            if loaded_fields:
-                update_fields = frozenset(loaded_fields)
-    
->       self.save_base(using=using, force_insert=force_insert,
-                       force_update=force_update, update_fields=update_fields)
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:739: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1494119 text>, raw = False
-force_insert = False, force_update = False, using = 'default'
-update_fields = None
-
-    def save_base(self, raw=False, force_insert=False,
-                  force_update=False, using=None, update_fields=None):
-        """
-        Handle the parts of saving which should be done only once per save,
-        yet need to be done in raw saves, too. This includes some sanity
-        checks and signal sending.
-    
-        The 'raw' argument is telling save_base not to save any parent
-        models and not to do any changes to the values before save. This
-        is used by fixture loading.
-        """
-        using = using or router.db_for_write(self.__class__, instance=self)
-        assert not (force_insert and (force_update or update_fields))
-        assert update_fields is None or update_fields
-        cls = origin = self.__class__
-        # Skip proxies, but keep the origin as the proxy model.
-        if cls._meta.proxy:
-            cls = cls._meta.concrete_model
-        meta = cls._meta
-        if not meta.auto_created:
-            pre_save.send(
-                sender=origin, instance=self, raw=raw, using=using,
-                update_fields=update_fields,
-            )
-        # A transaction isn't needed if one query is issued.
-        if meta.parents:
-            context_manager = transaction.atomic(using=using, savepoint=False)
-        else:
-            context_manager = transaction.mark_for_rollback_on_error(using=using)
-        with context_manager:
-            parent_inserted = False
-            if not raw:
-                parent_inserted = self._save_parents(cls, using, update_fields)
->           updated = self._save_table(
-                raw, cls, force_insert or parent_inserted,
-                force_update, using, update_fields,
-            )
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:776: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1494119 text>, raw = False
-cls = <class 'blog.models.Comment'>, force_insert = False, force_update = False
-using = 'default', update_fields = None
-
-    def _save_table(self, raw=False, cls=None, force_insert=False,
-                    force_update=False, using=None, update_fields=None):
-        """
-        Do the heavy-lifting involved in saving. Update or insert the data
-        for a single table.
-        """
-        meta = cls._meta
-        non_pks = [f for f in meta.local_concrete_fields if not f.primary_key]
-    
-        if update_fields:
-            non_pks = [f for f in non_pks
-                       if f.name in update_fields or f.attname in update_fields]
-    
-        pk_val = self._get_pk_val(meta)
-        if pk_val is None:
-            pk_val = meta.pk.get_pk_value_on_save(self)
-            setattr(self, meta.pk.attname, pk_val)
-        pk_set = pk_val is not None
-        if not pk_set and (force_update or update_fields):
-            raise ValueError("Cannot force an update in save() with no primary key.")
-        updated = False
-        # Skip an UPDATE when adding an instance and primary key has a default.
-        if (
-            not raw and
-            not force_insert and
-            self._state.adding and
-            meta.pk.default and
-            meta.pk.default is not NOT_PROVIDED
-        ):
-            force_insert = True
-        # If possible, try an UPDATE. If that doesn't update anything, do an INSERT.
-        if pk_set and not force_insert:
-            base_qs = cls._base_manager.using(using)
-            values = [(f, None, (getattr(self, f.attname) if raw else f.pre_save(self, False)))
-                      for f in non_pks]
-            forced_update = update_fields or force_update
-            updated = self._do_update(base_qs, using, pk_val, values, update_fields,
-                                      forced_update)
-            if force_update and not updated:
-                raise DatabaseError("Forced update did not affect any rows.")
-            if update_fields and not updated:
-                raise DatabaseError("Save with update_fields did not affect any rows.")
-        if not updated:
-            if meta.order_with_respect_to:
-                # If this is a model with an order_with_respect_to
-                # autopopulate the _order field
-                field = meta.order_with_respect_to
-                filter_args = field.get_filter_kwargs_for_object(self)
-                self._order = cls._base_manager.using(using).filter(**filter_args).aggregate(
-                    _order__max=Coalesce(
-                        ExpressionWrapper(Max('_order') + Value(1), output_field=IntegerField()),
-                        Value(0),
-                    ),
-                )['_order__max']
-            fields = meta.local_concrete_fields
-            if not pk_set:
-                fields = [f for f in fields if f is not meta.auto_field]
-    
-            returning_fields = meta.db_returning_fields
->           results = self._do_insert(cls._base_manager, using, fields, returning_fields, raw)
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:881: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <Comment: Test create comment 1494119 text>
-manager = <django.db.models.manager.Manager object at 0x740a0d4c1000>
-using = 'default'
-fields = [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>, <django.db...Field: text>, <django.db.models.fields.related.ForeignKey: author>, <django.db.models.fields.related.ForeignKey: post>]
-returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
-
-    def _do_insert(self, manager, using, fields, returning_fields, raw):
-        """
-        Do an INSERT. If returning_fields is defined then this method should
-        return the newly created data for the model.
-        """
->       return manager._insert(
-            [self], fields=fields, returning_fields=returning_fields,
-            using=using, raw=raw,
-        )
-
-venv/lib/python3.10/site-packages/django/db/models/base.py:919: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.models.manager.Manager object at 0x740a0d4c1000>
-args = ([<Comment: Test create comment 1494119 text>],)
-kwargs = {'fields': [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>,...ForeignKey: post>], 'raw': False, 'returning_fields': [<django.db.models.fields.BigAutoField: id>], 'using': 'default'}
-
-    def manager_method(self, *args, **kwargs):
->       return getattr(self.get_queryset(), name)(*args, **kwargs)
-
-venv/lib/python3.10/site-packages/django/db/models/manager.py:85: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <QuerySet []>, objs = [<Comment: Test create comment 1494119 text>]
-fields = [<django.db.models.fields.BooleanField: is_published>, <django.db.models.fields.DateTimeField: created_at>, <django.db...Field: text>, <django.db.models.fields.related.ForeignKey: author>, <django.db.models.fields.related.ForeignKey: post>]
-returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
-using = 'default', ignore_conflicts = False
-
-    def _insert(self, objs, fields, returning_fields=None, raw=False, using=None, ignore_conflicts=False):
-        """
-        Insert a new record for the given model. This provides an interface to
-        the InsertQuery class and is how Model.save() is implemented.
-        """
-        self._for_write = True
-        if using is None:
-            using = self.db
-        query = sql.InsertQuery(self.model, ignore_conflicts=ignore_conflicts)
-        query.insert_values(fields, objs, raw=raw)
->       return query.get_compiler(using=using).execute_sql(returning_fields)
-
-venv/lib/python3.10/site-packages/django/db/models/query.py:1270: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.models.sql.compiler.SQLInsertCompiler object at 0x740a0d2d8100>
-returning_fields = [<django.db.models.fields.BigAutoField: id>]
-
-    def execute_sql(self, returning_fields=None):
-        assert not (
-            returning_fields and len(self.query.objs) != 1 and
-            not self.connection.features.can_return_rows_from_bulk_insert
-        )
-        self.returning_fields = returning_fields
-        with self.connection.cursor() as cursor:
-            for sql, params in self.as_sql():
->               cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py:1416: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-
-    def execute(self, sql, params=None):
->       return self._execute_with_wrappers(sql, params, many=False, executor=self._execute)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:66: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-many = False
-executor = <bound method CursorWrapper._execute of <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>>
-
-    def _execute_with_wrappers(self, sql, params, many, executor):
-        context = {'connection': self.db, 'cursor': self}
-        for wrapper in reversed(self.db.execute_wrappers):
-            executor = functools.partial(wrapper, executor)
->       return executor(sql, params, many, context)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:75: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
->       with self.db.wrap_database_errors:
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:79: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.utils.DatabaseErrorWrapper object at 0x740a0d5377f0>
-exc_type = <class 'sqlite3.IntegrityError'>
-exc_value = IntegrityError('NOT NULL constraint failed: blog_comment.post_id')
-traceback = <traceback object at 0x740a0d4bb400>
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            return
-        for dj_exc_type in (
-                DataError,
-                OperationalError,
-                IntegrityError,
-                InternalError,
-                ProgrammingError,
-                NotSupportedError,
-                DatabaseError,
-                InterfaceError,
-                Error,
-        ):
-            db_exc_type = getattr(self.wrapper.Database, dj_exc_type.__name__)
-            if issubclass(exc_type, db_exc_type):
-                dj_exc_value = dj_exc_type(*exc_value.args)
-                # Only set the 'errors_occurred' flag for errors that may make
-                # the connection unusable.
-                if dj_exc_type not in (DataError, IntegrityError):
-                    self.wrapper.errors_occurred = True
->               raise dj_exc_value.with_traceback(traceback) from exc_value
-
-venv/lib/python3.10/site-packages/django/db/utils.py:90: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>
-sql = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (%s, %s, %s, %s, %s)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x740a0e4c3790>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x740a0d2d8040>})
-
-    def _execute(self, sql, params, *ignored_wrapper_args):
-        self.db.validate_no_broken_transaction()
-        with self.db.wrap_database_errors:
-            if params is None:
-                # params default might be backend specific.
-                return self.cursor.execute(sql)
-            else:
->               return self.cursor.execute(sql, params)
-
-venv/lib/python3.10/site-packages/django/db/backends/utils.py:84: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x740a0cf13ac0>
-query = 'INSERT INTO "blog_comment" ("is_published", "created_at", "text", "author_id", "post_id") VALUES (?, ?, ?, ?, ?)'
-params = [True, '2024-03-28 12:08:14.953760', 'Test create comment 1494119 text', 6, None]
-
-    def execute(self, query, params=None):
-        if params is None:
-            return Database.Cursor.execute(self, query)
-        query = self.convert_query(query)
->       return Database.Cursor.execute(self, query, params)
-E       django.db.utils.IntegrityError: NOT NULL constraint failed: blog_comment.post_id
-
-venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py:423: IntegrityError
-
-The above exception was the direct cause of the following exception:
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0cad9ab0>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0d40b790>
-assert_created = False
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        try:
->           return super().try_create_item(form, qs, submitter, assert_created)
-
-tests/form/comment/create_form_tester.py:83: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0cad9ab0>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0d40b790>
-assert_created = False
-
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        if not form.is_valid():
-            raise FormValidationException(form.errors)
-        elif form.errors:
-            raise FormValidationException(form.errors)
-    
-        items_before = set(qs.all())
-    
-        restored_data = restore_cleaned_data(form.cleaned_data)
-        try:
-            response = submitter.test_submit(
-                url=self._action, data=restored_data
-            )
-        except Exception as e:
->           raise FormValidationException(e) from e
-E           form.base_form_tester.FormValidationException: NOT NULL constraint failed: blog_comment.post_id
-
-tests/form/base_form_tester.py:207: FormValidationException
-
-The above exception was the direct cause of the following exception:
-
-user_client = <django.test.client.Client object at 0x740a0c8a9870>
-another_user_client = <django.test.client.Client object at 0x740a0c8a9180>
-unlogged_client = <django.test.client.Client object at 0x740a0c8a8fd0>
-post_with_published_location = <Post: Determine Recognize Song Threat Talk Report>
-another_user = <User: ebrandt>
-post_comment_context_form_item = KeyVal(key='form', val=<CommentForm bound=False, valid=False, fields=(text)>)
-CommentModel = <class 'blog.models.Comment'>
-CommentModelAdapter = <class 'adapters.comment.CommentModelAdapter.<locals>._CommentModelAdapter'>
-
-    @pytest.mark.django_db(transaction=True)
-    def test_404_on_comment_deleted_post(
-            user_client: django.test.Client,
-            another_user_client: django.test.Client,
-            unlogged_client: django.test.Client,
-            post_with_published_location: Any,
-            another_user: Model,
-            post_comment_context_form_item: Tuple[str, BaseForm],
-            CommentModel: Type[Model],
-            CommentModelAdapter: CommentModelAdapterT,
-    ):
-        post_with_published_location.author = another_user
-        post_with_published_location.save()
-        _, ctx_form = post_comment_context_form_item
-        a_post_get_response = get_a_post_get_response_safely(
-            user_client, post_with_published_location.id
-        )
-        creation_tester = CreateCommentFormTester(
-            a_post_get_response,
-            CommentModel,
             user_client,
+        )
+    
+        # checking images are visible on post creation
+        created_content = response_on_created.content.decode('utf-8')
+        img_count = created_content.count('<img')
+        expected_img_count = main_content_tester.n_or_page_size(len(created_items))
+        assert img_count >= expected_img_count, (
+            'Убедитесь, что при создании публикации она отображается с картинкой.'
+        )
+    
+>       edit_response, edit_url, del_url = _test_edit_post(
+            CommentModelAdapter,
             another_user_client,
-            unlogged_client,
-            item_adapter=None,
-            ModelAdapter=CommentModelAdapter,
-        )
-    
-        Form: Type[BaseForm] = type(ctx_form)
-        form_to_create = create_comment_creation_forms(
-            creation_tester, Form, CommentModel, CommentModelAdapter,
-            return_single_form=True
-        )
-    
-        post_with_published_location.delete()
-        post_with_published_location.save()
->       creation_tester.test_create_item(
-            form=form_to_create,
-            qs=CommentModel.objects.all(),
-            submitter=AuthorisedSubmitTester(
-                creation_tester,
-                test_response_cbk=(
-                    AuthorisedSubmitTester.get_test_response_404_cbk(
-                        err_msg=(
-                            "Убедитесь, что при попытке создания комментария "
-                            "к несуществующему посту возвращается статус 404."
-                        )
-                    )
-                ),
-            ),
-            assert_created=False,
+            comment_to_a_post,
+            unlogged_client=unlogged_client,
+            user_client=user_client,
         )
 
-tests/test_comment.py:285: 
+tests/test_post.py:111: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/form/base_form_tester.py:264: in test_create_item
-    response, created = self.try_create_item(
+tests/test_post.py:335: in _test_edit_post
+    response_on_commented = user_client.get(post_url)
+venv/lib/python3.10/site-packages/django/test/client.py:742: in get
+    response = super().get(path, data=data, secure=secure, **extra)
+venv/lib/python3.10/site-packages/django/test/client.py:396: in get
+    return self.generic('GET', path, secure=secure, **{
+venv/lib/python3.10/site-packages/django/test/client.py:473: in generic
+    return self.request(**r)
+venv/lib/python3.10/site-packages/django/test/client.py:719: in request
+    self.check_exception(response)
+venv/lib/python3.10/site-packages/django/test/client.py:580: in check_exception
+    raise exc_value
+venv/lib/python3.10/site-packages/django/core/handlers/exception.py:47: in inner
+    response = get_response(request)
+venv/lib/python3.10/site-packages/django/core/handlers/base.py:204: in _get_response
+    response = response.render()
+venv/lib/python3.10/site-packages/django/template/response.py:105: in render
+    self.content = self.rendered_content
+venv/lib/python3.10/site-packages/django/template/response.py:83: in rendered_content
+    return template.render(context, self._request)
+venv/lib/python3.10/site-packages/django/template/backends/django.py:61: in render
+    return self.template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:170: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:150: in render
+    return compiled_parent._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:62: in render
+    result = block.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
+venv/lib/python3.10/site-packages/django/template/loader_tags.py:195: in render
+    return template.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:172: in render
+    return self._render(context)
+venv/lib/python3.10/site-packages/django/test/utils.py:100: in instrumented_test_render
+    return self.nodelist.render(context)
+venv/lib/python3.10/site-packages/django/template/base.py:938: in render
+    bit = node.render_annotated(context)
+venv/lib/python3.10/site-packages/django/template/base.py:905: in render_annotated
+    return self.render(context)
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <form.comment.create_form_tester.CreateCommentFormTester object at 0x740a0cad9ab0>
-form = <CommentForm bound=True, valid=True, fields=(text)>, qs = <QuerySet []>
-submitter = <form.base_form_tester.AuthorisedSubmitTester object at 0x740a0d40b790>
-assert_created = False
+self = <ForNode: for comment in comments, tail_len: 13>
+context = [{'True': True, 'False': False, 'None': None}, {}, {}, {'paginator': <django.core.paginator.Paginator object at 0x7fea...ost': <Post: Expert Matter Writer Forward Memory When>, 'form': <CommentForm bound=False, valid=False, fields=(text)>}]
 
-    def try_create_item(
-        self,
-        form: BaseForm,
-        qs: QuerySet,
-        submitter: SubmitTester,
-        assert_created: bool = True,
-    ) -> Tuple[HttpResponse, Model]:
-        try:
-            return super().try_create_item(form, qs, submitter, assert_created)
-        except FormValidationException as e:
->           raise AssertionError(
-                "При создании комментария возникает ошибка:\n"
-                f"{type(e).__name__}: {e}"
-            ) from e
-E           AssertionError: При создании комментария возникает ошибка:
-E           FormValidationException: NOT NULL constraint failed: blog_comment.post_id
+    def render(self, context):
+        if 'forloop' in context:
+            parentloop = context['forloop']
+        else:
+            parentloop = {}
+        with context.push():
+            values = self.sequence.resolve(context, ignore_failures=True)
+            if values is None:
+                values = []
+            if not hasattr(values, '__len__'):
+>               values = list(values)
+E               TypeError: 'Post' object is not iterable
 
-tests/form/comment/create_form_tester.py:85: AssertionError
-================== 2 failed, 23 passed, 38 warnings in 3.08s ===================
+venv/lib/python3.10/site-packages/django/template/defaulttags.py:170: TypeError
+=========================== short test summary info ============================
+ERROR tests/test_comment.py::test_comment - TypeError: 'Post' object is not i...
+ERROR tests/test_comment.py::test_404_on_comment_deleted_post - TypeError: 'P...
+============= 1 failed, 22 passed, 23 warnings, 2 errors in 3.09s ==============

@@ -5,6 +5,7 @@ from django.views.generic import DeleteView, ListView, UpdateView
 from django.contrib.auth import get_user_model  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin  # type: ignore
 from django.urls import reverse  # type: ignore
+from django.views.generic.detail import SingleObjectMixin  # type: ignore
 
 from .models import Category, Comment, Post
 from .forms import CommentForm, PostForm, ProfileForm
@@ -26,7 +27,7 @@ class IndexListView(ListView):
         return Post.objects.category_filter()
 
 
-class PostDetailView(ListView):
+class PostDetailView(SingleObjectMixin, ListView):
     """
     Отдельный пост.
 
@@ -39,106 +40,90 @@ class PostDetailView(ListView):
 
     template_name: str = 'blog/detail.html'
     paginate_by: int = NUM_IN_PAGE
-    context_object_name = 'comments'
+    pk_url_kwarg = 'post_id'
 
-    def get_post(self) -> Post:
-        """
-        Возвращает пост.
-
-        Поскольку выбран ListView, то get_object относится к комментарию,
-        а не посту, поэтому этот метод его не дублирует.
-        """
-        post_id = self.kwargs.get('post_id')
-        if 'post' not in self.__dict__:
-            post: Post = get_object_or_404(
-                Post.objects.annotate_comment_count(),
-                pk=post_id,
-            )
-            if post.author != self.request.user:
-                post = get_object_or_404(
-                    Post.objects.category_filter(),
-                    pk=post_id,
-                )
-            self.publication = post
-        return self.publication
+    def get(self, request, *args, **kwargs):
+        """Устанавливает объект поста."""
+        self.object = self.get_object(
+            queryset=Post.objects.annotate_comment_count())
+        if self.object.author != self.request.user:
+            self.object = self.get_object(
+                queryset=Post.objects.category_filter())
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о посте."""
         context: dict = super().get_context_data(**kwargs)
-        post: Post = self.get_post()
-        context['post'] = post
+        context['post'] = self.object
+        context['comments'] = self.get_queryset()
         if self.request.user.is_authenticated:
             context['form'] = CommentForm(self.request.POST or None)
         return context
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список комментариев данного поста."""
-        post: Post = self.get_post()
-        queryset: QuerySet = post.comments_for_post.select_related('author')
+        queryset: QuerySet = (self.object.
+                              comments_for_post.select_related('author'))
         return queryset
 
 
-class CategoryListView(ListView):
+class CategoryListView(SingleObjectMixin, ListView):
     """Категория постов."""
 
     template_name: str = 'blog/category.html'
     paginate_by: int = NUM_IN_PAGE
+    slug_url_kwarg = 'category_slug'
+    slug_field = 'slug'
 
-    def get_category(self) -> Category:
-        """Возвращает категорию."""
-        if 'category' not in self.__dict__:
-            category: Category = get_object_or_404(
-                Category,
-                is_published=True,
-                slug=self.kwargs.get('category_slug'))
-            self.category = category
-        return self.category
+    def get(self, request, *args, **kwargs):
+        """Устанавливает объект категории."""
+        self.object = self.get_object(
+            queryset=Category.objects.filter(is_published=True))
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о категории."""
         context: dict = super().get_context_data(**kwargs)
-        category: Category = self.get_category()
-        context['category'] = category
+        context['category'] = self.object
         return context
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций данной категории."""
-        category: Category = self.get_category()
-        queryset: QuerySet = category.posts_for_category.publish_filter()
-        return queryset
+        return self.object.posts_for_category.publish_filter()
 
 
-class ProfileListView(ListView):
+class ProfileListView(SingleObjectMixin, ListView):
     """Страница пользователя со списком публикаций."""
 
     paginate_by: int = NUM_IN_PAGE
     template_name: str = 'blog/profile.html'
+    slug_url_kwarg = 'name_slug'
+    slug_field = 'username'
 
-    def get_author(self) -> object:
-        """Возвращает автора."""
-        if 'author' not in self.__dict__:
-            author: object = get_object_or_404(
-                User,
-                username=self.kwargs.get('name_slug'))
-            self.author = author
-        return self.author
+    def get(self, request, *args, **kwargs):
+        """Устанавливает объект автора."""
+        self.object = self.get_object(
+            queryset=User.objects.all())
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict:
         """Добавляет в контекст сведения о профиле пользователя."""
         context: dict = super().get_context_data(**kwargs)
-        context['profile'] = self.get_author()
+        context['profile'] = self.object
         return context
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций данного автора."""
-        author = self.get_author()
         queryset: QuerySet = (
             Post.objects.
             annotate_comment_count().
             select_related('author', 'category').
-            filter(author=author))
-        if self.request.user != author:
-            queryset = queryset.category_filter()
+            filter(author=self.object))
+        if self.request.user != self.object:
+            queryset = (
+                Post.objects.
+                category_filter().
+                filter(author=self.object))
         return queryset
 
 
@@ -150,7 +135,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def get_success_url(self):
-        """Переадресация."""
+        """
+        Переадресация.
+
+        В данном случае особое условие, отличающееся
+        от перенаправления в модели поста.
+        """
         return reverse('blog:profile',
                        kwargs={'name_slug': self.request.user.username})
 
@@ -176,46 +166,40 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
 
-    def get_success_url(self):
-        """Переадресация."""
-        return reverse('blog:post_detail',
-                       kwargs={'post_id': self.kwargs.get('post_id')})
-
     def form_valid(self, form):
-        """Записать автора."""
+        """
+        Записать автора и пост.
+
+        Автор поста может его комментировать всегда,
+        а прочие - только если пост прошел проверки.
+        """
+        post_id = self.kwargs.get('post_id')
         form.instance.author = self.request.user
         form.instance.post = get_object_or_404(
             Post.objects.annotate_comment_count(),
-            pk=self.kwargs.get('post_id'))
+            pk=post_id)
+        if form.instance.post.author != form.instance.author:
+            form.instance.post = get_object_or_404(
+                Post.objects.category_filter(),
+                pk=post_id)
         return super().form_valid(form)
 
 
 class CommentUpdateView(OnlyAuthorMixin, UpdateView):
     """Редактирование комментария."""
 
+    model = Comment
     form_class = CommentForm
     template_name: str = 'blog/comment.html'
-
-    def get_object(self):
-        """Возвращает комментарий."""
-        return get_object_or_404(Comment,
-                                 pk=self.kwargs.get('comment_id'))
-
-    def get_success_url(self):
-        """Переадресация."""
-        return reverse('blog:post_detail',
-                       kwargs={'post_id': self.kwargs.get('post_id')})
+    pk_url_kwarg = 'comment_id'
 
 
 class PostDeleteView(OnlyAuthorMixin, DeleteView):
     """Удаление поста."""
 
+    model = Post
     template_name = 'blog/create.html'
-
-    def get_object(self):
-        """Возвращает пост."""
-        return get_object_or_404(Post,
-                                 pk=self.kwargs.get('post_id'))
+    pk_url_kwarg = 'post_id'
 
     def get_success_url(self):
         """Переадресация."""
@@ -226,12 +210,9 @@ class PostDeleteView(OnlyAuthorMixin, DeleteView):
 class CommentDeleteView(OnlyAuthorMixin, DeleteView):
     """Удаление комментария."""
 
+    model = Comment
     template_name = 'blog/comment.html'
-
-    def get_object(self):
-        """Возвращает комментарий."""
-        return get_object_or_404(Comment,
-                                 pk=self.kwargs.get('comment_id'))
+    pk_url_kwarg = 'comment_id'
 
     def get_success_url(self):
         """Переадресация."""
@@ -242,13 +223,15 @@ class CommentDeleteView(OnlyAuthorMixin, DeleteView):
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """Редактирование профиля."""
 
+    model = User
     form_class = ProfileForm
     template_name: str = 'blog/user.html'
 
     def get_object(self):
         """Возвращает профиль."""
-        return get_object_or_404(User,
-                                 pk=self.request.user.pk)
+        self.kwargs['pk'] = self.request.user.pk
+        self.pk_url_kwarg = 'pk'
+        return super().get_object()
 
     def get_success_url(self):
         """Переадресация."""
