@@ -39,12 +39,12 @@ class PostDetailView(ListView):
         if 'post' not in self.__dict__:
             post: Post = get_object_or_404(
                 Post.objects.annotate_comment_count(),
-                pk=self.kwargs.get('id'),
+                pk=self.kwargs.get('post_id'),
             )
             if post.author != self.request.user:
                 post = get_object_or_404(
                     Post.objects.category_filter(),
-                    pk=self.kwargs.get('id'),
+                    pk=self.kwargs.get('post_id'),
                 )
             self.publication = post
         return self.publication
@@ -158,7 +158,7 @@ class OnlyAuthorMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         """Перенаправляет неавторов."""
         return redirect("blog:post_detail",
-                        id=self.kwargs.get('post_id'))
+                        post_id=self.kwargs.get('post_id'))
 
 
 class PostUpdateView(OnlyAuthorMixin, UpdateView):
@@ -175,7 +175,7 @@ class PostUpdateView(OnlyAuthorMixin, UpdateView):
     def get_success_url(self):
         """Переадресация."""
         return reverse_lazy("blog:post_detail",
-                            kwargs={"id": self.kwargs.get('post_id')})
+                            kwargs={"post_id": self.kwargs.get('post_id')})
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
@@ -188,7 +188,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         """Переадресация."""
         return reverse_lazy("blog:post_detail",
-                            kwargs={"id": self.kwargs.get('post_id')})
+                            kwargs={"post_id": self.kwargs.get('post_id')})
 
     def form_valid(self, form):
         """Записать автора."""
@@ -213,7 +213,7 @@ class CommentUpdateView(OnlyAuthorMixin, UpdateView):
     def get_success_url(self):
         """Переадресация."""
         return reverse_lazy("blog:post_detail",
-                            kwargs={"id": self.kwargs.get('post_id')})
+                            kwargs={"post_id": self.kwargs.get('post_id')})
 
 
 class PostDeleteView(OnlyAuthorMixin, DeleteView):
@@ -245,7 +245,7 @@ class CommentDeleteView(OnlyAuthorMixin, DeleteView):
     def get_success_url(self):
         """Переадресация."""
         return reverse_lazy("blog:post_detail",
-                            kwargs={"id": self.kwargs.get('post_id')})
+                            kwargs={"post_id": self.kwargs.get('post_id')})
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):

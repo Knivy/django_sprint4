@@ -1,6 +1,6 @@
 from django.db import models  # type: ignore
 from django.contrib.auth import get_user_model  # type: ignore
-from django.urls import reverse_lazy  # type: ignore
+from django.urls import reverse  # type: ignore
 
 from .querysets import CustomQuerySet
 
@@ -122,7 +122,7 @@ class Post(BaseModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse_lazy("blog:post_detail", kwargs={'id': self.pk})
+        return reverse('blog:post_detail', kwargs={'post_id': self.pk})
 
 
 class Comment(BaseModel):
