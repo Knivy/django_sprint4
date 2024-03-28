@@ -201,6 +201,15 @@ class PostDeleteView(OnlyAuthorMixin, DeleteView):
     template_name = 'blog/create.html'
     pk_url_kwarg = 'post_id'
 
+    def get_context_data(self, **kwargs) -> dict:
+        """Добавляет в контекст сведения о форме."""
+        context: dict = super().get_context_data(**kwargs)
+        context['form'] = PostForm(instance=get_object_or_404(
+            Post,
+            pk=self.kwargs.get(self.pk_url_kwarg)
+        ))
+        return context
+
     def get_success_url(self):
         """Переадресация."""
         return reverse('blog:profile',

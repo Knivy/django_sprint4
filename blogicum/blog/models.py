@@ -152,6 +152,8 @@ class Comment(BaseModel):
         return self.text
 
     def get_absolute_url(self):
-        """Поскольку отдельной страницы комментария нет,
-        то перенаправление на страницу поста."""
+        """
+        Поскольку отдельной страницы комментария нет,
+        то перенаправление на страницу поста.
+        """
         return reverse('blog:post_detail', kwargs={'post_id': self.post.pk})
