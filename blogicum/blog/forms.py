@@ -28,7 +28,7 @@ class CommentForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
-    """Форма создания и редактирования комментария."""
+    """Форма создания и редактирования профиля."""
 
     class Meta:
         model = User
