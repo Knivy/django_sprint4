@@ -16,7 +16,6 @@ class CustomQuerySet(QuerySet):
     def publish_filter(self):
         """Запрос опубликованных постов с датой не позднее сейчас."""
         return (self
-                .annotate_comment_count()
                 .select_related('author', 'category')
                 .filter(
                     is_published=True,
@@ -26,3 +25,7 @@ class CustomQuerySet(QuerySet):
     def category_filter(self):
         """Запрос опубликованной категории."""
         return self.publish_filter().filter(category__is_published=True)
+    
+    def all_filter(self):
+        """Применить все фильтры."""
+        return self.category_filter().annotate_comment_count()

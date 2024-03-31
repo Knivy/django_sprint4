@@ -21,10 +21,11 @@ class IndexListView(ListView):
 
     template_name: str = 'blog/index.html'
     paginate_by: int = NUM_IN_PAGE
+    model = Post
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций."""
-        return Post.objects.category_filter()
+        return super().get_queryset().all_filter()
 
 
 class PostDetailView(SingleObjectMixin, ListView):
@@ -36,6 +37,10 @@ class PostDetailView(SingleObjectMixin, ListView):
     Согласно stackoverflow, в данном случае выбор между ListView и DetailView
     является преимущественно делом вкуса.
     https://stackoverflow.com/questions/9777121/django-generic-views-when-to-use-listview-vs-detailview
+
+    Класс организован в соответствии с примером из документации:
+    https://docs.djangoproject.com/en/3.2/topics/class-based-views/mixins/#using-singleobjectmixin-with-listview
+    В частности, self.object относится к посту, а get_queryset к комментариям.
     """
 
     template_name: str = 'blog/detail.html'
@@ -45,7 +50,7 @@ class PostDetailView(SingleObjectMixin, ListView):
     def get(self, request, *args, **kwargs):
         """Устанавливает объект поста."""
         self.object = self.get_object(
-            queryset=Post.objects.annotate_comment_count())
+            queryset=Post.objects.all())
         if self.object.author != self.request.user:
             self.object = self.get_object(
                 queryset=Post.objects.category_filter())
@@ -89,7 +94,8 @@ class CategoryListView(SingleObjectMixin, ListView):
 
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций данной категории."""
-        return self.object.posts_for_category.publish_filter()
+        return (self.object.posts_for_category.
+                publish_filter().annotate_comment_count())
 
 
 class ProfileListView(SingleObjectMixin, ListView):
@@ -115,15 +121,13 @@ class ProfileListView(SingleObjectMixin, ListView):
     def get_queryset(self) -> QuerySet:
         """Возвращает список публикаций данного автора."""
         queryset: QuerySet = (
-            Post.objects.
+            self.object.posts_for_author.
             annotate_comment_count().
-            select_related('author', 'category').
-            filter(author=self.object))
+            select_related('category'))
         if self.request.user != self.object:
             queryset = (
-                Post.objects.
-                category_filter().
-                filter(author=self.object))
+                queryset.
+                category_filter())
         return queryset
 
 
@@ -197,14 +201,20 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         """
         post_id = self.kwargs.get('post_id')
         form.instance.author = self.request.user
-        form.instance.post = get_object_or_404(
+        post = get_object_or_404(
             Post.objects.annotate_comment_count(),
             pk=post_id)
-        if form.instance.post.author != form.instance.author:
-            form.instance.post = get_object_or_404(
-                Post.objects.category_filter(),
+        if post.author != form.instance.author:
+            post = get_object_or_404(
+                Post.objects.all_filter(),
                 pk=post_id)
+        form.instance.post = post
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse('blog:post_detail',
+                       kwargs={'post_id': self.kwargs.get('post_id')})
 
 
 class CommentUpdateView(OnlyAuthorMixin, UpdateView):
@@ -214,6 +224,11 @@ class CommentUpdateView(OnlyAuthorMixin, UpdateView):
     form_class = CommentForm
     template_name: str = 'blog/comment.html'
     pk_url_kwarg = 'comment_id'
+
+    def get_success_url(self):
+        """Переадресация."""
+        return reverse('blog:post_detail',
+                       kwargs={'post_id': self.kwargs.get('post_id')})
 
 
 class CommentDeleteView(OnlyAuthorMixin, DeleteView):
@@ -238,9 +253,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         """Возвращает профиль."""
-        self.kwargs['pk'] = self.request.user.pk
-        self.pk_url_kwarg = 'pk'
-        return super().get_object()
+        return self.request.user
 
     def get_success_url(self):
         """Переадресация."""
