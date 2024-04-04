@@ -210,7 +210,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
                 pk=post_id)
         form.instance.post = post
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         """Переадресация."""
         return reverse('blog:post_detail',

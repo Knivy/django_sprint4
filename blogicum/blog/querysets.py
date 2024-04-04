@@ -25,7 +25,7 @@ class CustomQuerySet(QuerySet):
     def category_filter(self):
         """Запрос опубликованной категории."""
         return self.publish_filter().filter(category__is_published=True)
-    
+
     def all_filter(self):
         """Применить все фильтры."""
         return self.category_filter().annotate_comment_count()
